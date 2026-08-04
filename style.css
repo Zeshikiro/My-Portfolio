@@ -1182,6 +1182,8 @@ a {
 
 /* Cert cards inside accordion */
 .cert-accordion-grid .cert-card {
+  display: flex;
+  flex-direction: column;
   border-radius: var(--radius-md);
   background: var(--bg-surface);
   border: 1px solid var(--glass-border);
@@ -1214,6 +1216,7 @@ a {
 
 .cert-accordion-grid .cert-info {
   padding: 16px;
+  flex: 1;
 }
 .cert-accordion-grid .cert-title {
   font-family: var(--font-heading);
