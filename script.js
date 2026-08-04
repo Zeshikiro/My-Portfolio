@@ -446,6 +446,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // ========== CONTACT SOCIAL DROPDOWN ==========
+    const socialDropdown = document.getElementById('social-dropdown');
+    if (socialDropdown) {
+        const header = socialDropdown.querySelector('.contact-card-header');
+        if (header) {
+            header.addEventListener('click', () => {
+                socialDropdown.classList.toggle('open');
+            });
+        }
+    }
+
     // ========== PHONE MOCKUP FLOAT ==========
     const phoneMockup = document.querySelector('.phone-mockup');
     if (phoneMockup) {
