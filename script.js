@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     // ========== SECTION SWITCHING ==========
-    const contentSectionIds = ['about', 'skills', 'projects', 'education', 'certifications', 'contact'];
+    const contentSectionIds = ['hero', 'about', 'skills', 'projects', 'education', 'certifications', 'contact'];
     const contentSections = contentSectionIds.map(id => document.getElementById(id)).filter(Boolean);
-    const navLinks = document.querySelectorAll('.nav-link');
+    const navLinks = document.querySelectorAll('.nav-link, .nav-logo');
     const navbar = document.getElementById('navbar');
     let activeSection = null;
 
@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const target = document.getElementById(sectionId);
         if (!target) return;
 
-        target.style.display = 'block';
+        target.style.display = '';
         void target.offsetHeight; // force reflow for animation
         target.classList.add('active-section');
         activeSection = sectionId;
@@ -463,7 +463,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // ========== HANDLE INITIAL HASH ==========
     const initialHash = window.location.hash.substring(1);
     if (initialHash && contentSectionIds.includes(initialHash)) {
-        // Small delay so the page renders first
         setTimeout(() => showSection(initialHash), 100);
+    } else {
+        setTimeout(() => showSection('hero'), 100);
     }
 });
