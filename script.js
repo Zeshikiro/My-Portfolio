@@ -343,20 +343,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const imgSrc = img ? img.src : '';
         const title = card.querySelector('.cert-title').textContent;
         const desc = card.querySelector('.cert-desc').textContent;
-        const rotation = card.getAttribute('data-rotate');
-        
         if (imgSrc) {
             lightboxImg.src = imgSrc;
             lightboxImg.style.display = 'block';
         } else {
             lightboxImg.src = '';
             lightboxImg.style.display = 'none';
-        }
-
-        if (rotation) {
-            lightboxImg.classList.add('rotated');
-        } else {
-            lightboxImg.classList.remove('rotated');
         }
         
         lightboxTitle.textContent = title;

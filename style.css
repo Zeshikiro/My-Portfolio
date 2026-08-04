@@ -1202,11 +1202,6 @@ a {
   transform: scale(1.05);
 }
 
-.cert-accordion-grid .cert-card[data-rotate] .cert-image img {
-  object-fit: contain;
-  background: #fff;
-}
-
 .cert-accordion-grid .cert-info {
   padding: 16px;
 }
@@ -1332,12 +1327,6 @@ a {
   box-shadow: 0 20px 80px rgba(0,0,0,0.6);
   object-fit: contain;
   transition: transform 0.3s ease;
-}
-
-.lightbox-image-wrap img.rotated {
-  transform: rotate(-90deg);
-  max-width: 70vh;
-  max-height: 75vw;
 }
 
 .lightbox-info {
