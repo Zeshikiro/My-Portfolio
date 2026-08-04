@@ -1,6 +1,148 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // 2. Navbar Scroll Effect
+    // ========== SECTION SWITCHING ==========
+    const contentSectionIds = ['about', 'skills', 'projects', 'education', 'certifications', 'contact'];
+    const contentSections = contentSectionIds.map(id => document.getElementById(id)).filter(Boolean);
+    const navLinks = document.querySelectorAll('.nav-link');
     const navbar = document.getElementById('navbar');
+    let activeSection = null;
+
+    // Track which sections have already played their animations
+    const animatedSections = new Set();
+
+    // Hide all content sections initially
+    contentSections.forEach(section => {
+        section.style.display = 'none';
+    });
+
+    function showSection(sectionId) {
+        // If same section, just scroll to it
+        if (activeSection === sectionId) {
+            document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            return;
+        }
+
+        // Hide all content sections
+        contentSections.forEach(s => {
+            s.classList.remove('active-section');
+            s.style.display = 'none';
+        });
+
+        // Show target section
+        const target = document.getElementById(sectionId);
+        if (!target) return;
+
+        target.style.display = 'block';
+        void target.offsetHeight; // force reflow for animation
+        target.classList.add('active-section');
+        activeSection = sectionId;
+
+        // Scroll to the section
+        setTimeout(() => {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 50);
+
+        // Trigger animations only on first visit
+        if (!animatedSections.has(sectionId)) {
+            animatedSections.add(sectionId);
+
+            // Reveal animations with staggered delays
+            const reveals = target.querySelectorAll('.reveal');
+            reveals.forEach((el, i) => {
+                setTimeout(() => el.classList.add('active'), i * 80);
+            });
+
+            // Counter animations (about section)
+            if (sectionId === 'about') {
+                triggerCounters(target);
+            }
+
+            // Skill bar animations (skills section)
+            if (sectionId === 'skills') {
+                // Small delay so reveal plays first
+                setTimeout(() => triggerSkillBars(target), 400);
+            }
+        }
+
+        // Update active nav link
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === `#${sectionId}`) {
+                link.classList.add('active');
+            }
+        });
+
+        // Update URL hash without scrolling
+        history.replaceState(null, null, `#${sectionId}`);
+    }
+
+    // ========== COUNTER ANIMATION ==========
+    const easeOutQuart = t => 1 - (--t) * t * t * t;
+
+    function triggerCounters(container) {
+        const statNumbers = container.querySelectorAll('.stat-number');
+        statNumbers.forEach(target => {
+            const endValue = parseInt(target.getAttribute('data-count'), 10);
+            const duration = 1500;
+            let startTime = null;
+
+            const animate = (currentTime) => {
+                if (!startTime) startTime = currentTime;
+                const progress = currentTime - startTime;
+                const percentage = Math.min(progress / duration, 1);
+                target.textContent = Math.floor(easeOutQuart(percentage) * endValue);
+
+                if (progress < duration) {
+                    requestAnimationFrame(animate);
+                } else {
+                    target.textContent = endValue;
+                }
+            };
+            requestAnimationFrame(animate);
+        });
+    }
+
+    // ========== SKILL BAR ANIMATION ==========
+    function triggerSkillBars(container) {
+        const categories = container.querySelectorAll('.skill-category');
+        categories.forEach(category => {
+            const bars = category.querySelectorAll('.skill-progress');
+            bars.forEach((bar, index) => {
+                setTimeout(() => {
+                    bar.style.width = bar.getAttribute('data-width') + '%';
+                    bar.classList.add('animated');
+                }, index * 200);
+            });
+        });
+    }
+
+    // ========== NAV CLICK HANDLERS ==========
+    navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const sectionId = link.getAttribute('href').substring(1);
+            if (contentSectionIds.includes(sectionId)) {
+                showSection(sectionId);
+            }
+        });
+    });
+
+    // ========== HERO CTA & IN-PAGE LINKS ==========
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        // Skip nav links (already handled above) and empty hrefs
+        if (anchor.classList.contains('nav-link')) return;
+
+        anchor.addEventListener('click', function(e) {
+            const targetId = this.getAttribute('href').substring(1);
+            if (!targetId) return;
+
+            if (contentSectionIds.includes(targetId)) {
+                e.preventDefault();
+                showSection(targetId);
+            }
+        });
+    });
+
+    // ========== NAVBAR SCROLL EFFECT ==========
     window.addEventListener('scroll', () => {
         if (window.scrollY > 50) {
             navbar.classList.add('scrolled');
@@ -9,61 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 3. Active Nav Link Highlighting & 5. Smooth Scrolling
-    const navLinks = document.querySelectorAll('.nav-link');
-    const sections = document.querySelectorAll('section');
-
-    const updateActiveLink = () => {
-        let currentId = '';
-        
-        // Find which section is currently in view
-        sections.forEach(section => {
-            const sectionTop = section.offsetTop - 100;
-            const sectionHeight = section.clientHeight;
-            if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
-                currentId = section.getAttribute('id');
-            }
-        });
-        
-        // Handle bottom of page
-        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 2) {
-            const lastSection = sections[sections.length - 1];
-            currentId = lastSection.getAttribute('id');
-        }
-
-        // Add 'active' to the corresponding nav link
-        navLinks.forEach(link => {
-            link.classList.remove('active');
-            if (link.getAttribute('href') === `#${currentId}`) {
-                link.classList.add('active');
-            }
-        });
-    };
-
-    window.addEventListener('scroll', updateActiveLink);
-    
-    // Smooth scrolling
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            const targetId = this.getAttribute('href');
-            if(targetId === '#') return;
-            
-            const targetElement = document.querySelector(targetId);
-            if (targetElement) {
-                e.preventDefault();
-                const offset = 80; // offset for fixed navbar
-                const elementPosition = targetElement.getBoundingClientRect().top;
-                const offsetPosition = elementPosition + window.scrollY - offset;
-
-                window.scrollTo({
-                    top: offsetPosition,
-                    behavior: 'smooth'
-                });
-            }
-        });
-    });
-
-    // 4. Mobile Menu Toggle
+    // ========== MOBILE MENU TOGGLE ==========
     const navToggle = document.getElementById('nav-toggle');
     const navMenu = document.getElementById('nav-menu');
     
@@ -77,7 +165,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (navToggle && navMenu) {
         navToggle.addEventListener('click', toggleMenu);
         
-        // Close menu when a link is clicked
         navLinks.forEach(link => {
             link.addEventListener('click', () => {
                 if (navMenu.classList.contains('active')) {
@@ -87,7 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 6. Typing Animation
+    // ========== TYPING ANIMATION ==========
     const typedTextElement = document.getElementById('typed-text');
     if (typedTextElement) {
         const phrases = ['IT Student', 'Lead Developer', 'Problem Solver', 'Tech Enthusiast'];
@@ -123,7 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
         type();
     }
 
-    // 7. Particle Canvas Animation
+    // ========== PARTICLE CANVAS ==========
     const canvas = document.getElementById('particle-canvas');
     if (canvas) {
         const ctx = canvas.getContext('2d');
@@ -142,17 +229,16 @@ document.addEventListener('DOMContentLoaded', () => {
             constructor() {
                 this.x = Math.random() * canvas.width;
                 this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 2 + 1; // 1-3px
+                this.size = Math.random() * 2 + 1;
                 this.speedX = (Math.random() * 0.6 + 0.2) * (Math.random() > 0.5 ? 1 : -1);
                 this.speedY = (Math.random() * 0.6 + 0.2) * (Math.random() > 0.5 ? 1 : -1);
-                this.opacity = Math.random() * 0.4 + 0.1; // 0.1-0.5
+                this.opacity = Math.random() * 0.4 + 0.1;
             }
 
             update() {
                 this.x += this.speedX;
                 this.y += this.speedY;
 
-                // Wrap around edges
                 if (this.x > canvas.width) this.x = 0;
                 else if (this.x < 0) this.x = canvas.width;
                 
@@ -187,7 +273,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 particles[i].update();
                 particles[i].draw();
 
-                // Draw lines between nearby particles
                 for (let j = i; j < particles.length; j++) {
                     const dx = particles[i].x - particles[j].x;
                     const dy = particles[i].y - particles[j].y;
@@ -209,7 +294,6 @@ document.addEventListener('DOMContentLoaded', () => {
         initParticles();
         animateParticles();
 
-        // Pause canvas animation when hero is out of view
         const heroObserver = new IntersectionObserver((entries) => {
             isHeroVisible = entries[0].isIntersecting;
         }, { threshold: 0 });
@@ -218,79 +302,28 @@ document.addEventListener('DOMContentLoaded', () => {
         if(heroSection) heroObserver.observe(heroSection);
     }
 
-    // 8. Scroll Reveal Animation
-    const revealElements = document.querySelectorAll('.reveal');
-    const revealObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('active');
-                observer.unobserve(entry.target);
-            }
+    // ========== CERT ACCORDION TOGGLE ==========
+    const accordionHeaders = document.querySelectorAll('.cert-accordion-header');
+    accordionHeaders.forEach(header => {
+        header.addEventListener('click', () => {
+            const isExpanded = header.getAttribute('aria-expanded') === 'true';
+            const content = header.nextElementSibling;
+
+            accordionHeaders.forEach(otherHeader => {
+                if (otherHeader !== header) {
+                    otherHeader.setAttribute('aria-expanded', 'false');
+                    otherHeader.nextElementSibling.classList.remove('open');
+                }
+            });
+
+            header.setAttribute('aria-expanded', !isExpanded);
+            content.classList.toggle('open', !isExpanded);
         });
-    }, { threshold: 0.1 });
-    
-    revealElements.forEach(el => revealObserver.observe(el));
+    });
 
-    // 9. Counter Animation
-    const easeOutQuart = t => 1 - (--t) * t * t * t;
-    const statNumbers = document.querySelectorAll('.stat-number');
-    
-    const counterObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const target = entry.target;
-                const endValue = parseInt(target.getAttribute('data-count'), 10);
-                const duration = 1500;
-                let startTime = null;
-
-                const animate = (currentTime) => {
-                    if (!startTime) startTime = currentTime;
-                    const progress = currentTime - startTime;
-                    const percentage = Math.min(progress / duration, 1);
-                    
-                    const currentValue = Math.floor(easeOutQuart(percentage) * endValue);
-                    target.textContent = currentValue;
-
-                    if (progress < duration) {
-                        requestAnimationFrame(animate);
-                    } else {
-                        target.textContent = endValue;
-                    }
-                };
-
-                requestAnimationFrame(animate);
-                observer.unobserve(target);
-            }
-        });
-    }, { threshold: 0.5 });
-    
-    statNumbers.forEach(el => counterObserver.observe(el));
-
-    // 10. Skill Bar Animation
-    const skillCategories = document.querySelectorAll('.skill-category');
-    const skillObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const category = entry.target;
-                const progressBars = category.querySelectorAll('.skill-progress');
-                
-                progressBars.forEach((bar, index) => {
-                    setTimeout(() => {
-                        bar.style.width = bar.getAttribute('data-width') + '%';
-                        bar.classList.add('animated');
-                    }, index * 200);
-                });
-                
-                observer.unobserve(category);
-            }
-        });
-    }, { threshold: 0.2 });
-
-    skillCategories.forEach(category => skillObserver.observe(category));
-
-    // 11. Lightbox / Certificate Viewer
+    // ========== LIGHTBOX / CERTIFICATE VIEWER ==========
     const lightbox = document.getElementById('lightbox');
-    const certCards = document.querySelectorAll('.cert-card');
+    const certCards = document.querySelectorAll('.cert-card[data-cert]');
     const lightboxOverlay = document.getElementById('lightbox-overlay');
     const lightboxClose = document.getElementById('lightbox-close');
     const lightboxPrev = document.getElementById('lightbox-prev');
@@ -310,13 +343,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const imgSrc = img ? img.src : '';
         const title = card.querySelector('.cert-title').textContent;
         const desc = card.querySelector('.cert-desc').textContent;
+        const rotation = card.getAttribute('data-rotate');
         
         if (imgSrc) {
             lightboxImg.src = imgSrc;
             lightboxImg.style.display = 'block';
         } else {
             lightboxImg.src = '';
-            lightboxImg.style.display = 'none'; // Fallback if no image is present
+            lightboxImg.style.display = 'none';
+        }
+
+        if (rotation) {
+            lightboxImg.classList.add('rotated');
+        } else {
+            lightboxImg.classList.remove('rotated');
         }
         
         lightboxTitle.textContent = title;
@@ -343,7 +383,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (lightbox && certCards.length > 0) {
         certCards.forEach((card, index) => {
-            card.addEventListener('click', () => openLightbox(index));
+            card.addEventListener('click', (e) => {
+                e.stopPropagation();
+                openLightbox(index);
+            });
         });
 
         lightboxClose.addEventListener('click', closeLightbox);
@@ -359,7 +402,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 12. Contact Form
+    // ========== CONTACT FORM ==========
     const contactForm = document.getElementById('contact-form');
     if (contactForm) {
         const btnSubmit = document.getElementById('btn-submit');
@@ -370,7 +413,6 @@ document.addEventListener('DOMContentLoaded', () => {
             
             let isValid = true;
             
-            // Basic validation
             formGroups.forEach(group => {
                 const input = group.querySelector('input, textarea');
                 group.classList.remove('error');
@@ -389,16 +431,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (!isValid) return;
 
-            // Loading state
             btnSubmit.classList.add('loading');
             btnSubmit.setAttribute('disabled', 'true');
 
-            // Simulate sending
             setTimeout(() => {
                 btnSubmit.classList.remove('loading');
                 btnSubmit.classList.add('success');
                 
-                // Reset form
                 setTimeout(() => {
                     btnSubmit.classList.remove('success');
                     btnSubmit.removeAttribute('disabled');
@@ -407,7 +446,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 1500);
         });
         
-        // Remove error on input
         formGroups.forEach(group => {
             const input = group.querySelector('input, textarea');
             input.addEventListener('input', () => {
@@ -416,10 +454,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 13. Phone Mockup Float Animation
+    // ========== PHONE MOCKUP FLOAT ==========
     const phoneMockup = document.querySelector('.phone-mockup');
     if (phoneMockup) {
-        // Ensure the CSS class float is added on page load for the animation
         phoneMockup.classList.add('float');
+    }
+
+    // ========== HANDLE INITIAL HASH ==========
+    const initialHash = window.location.hash.substring(1);
+    if (initialHash && contentSectionIds.includes(initialHash)) {
+        // Small delay so the page renders first
+        setTimeout(() => showSection(initialHash), 100);
     }
 });
