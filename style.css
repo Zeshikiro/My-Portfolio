@@ -226,7 +226,7 @@ a {
 
 /* ========== 4. NAVBAR ========== */
 .navbar {
-  position: fixed;
+  position: sticky;
   top: 0;
   left: 0;
   width: 100%;
@@ -315,8 +315,8 @@ a {
 
 /* ========== 5. HERO SECTION ========== */
 .hero {
-  min-height: 100vh; /* Fallback for older browsers */
-  min-height: 100dvh; /* Dynamic viewport height fixes in-app browser bugs */
+  min-height: calc(100vh - 70px); /* Fallback for older browsers */
+  min-height: calc(100dvh - 70px); /* Dynamic viewport height fixes in-app browser bugs */
   position: relative;
   overflow: hidden;
   display: flex;

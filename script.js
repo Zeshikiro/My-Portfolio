@@ -264,6 +264,17 @@ document.addEventListener('DOMContentLoaded', () => {
         document.documentElement.addEventListener('mouseleave', () => {
             mouse.x = canvas.width / 2;
             mouse.y = canvas.height / 2;
+            
+            // Also center the custom cursor if it exists
+            if (typeof mouseX !== 'undefined') {
+                mouseX = window.innerWidth / 2;
+                mouseY = window.innerHeight / 2;
+                const cursorDot = document.querySelector('.cursor-dot');
+                if (cursorDot) {
+                    cursorDot.style.left = `${mouseX}px`;
+                    cursorDot.style.top = `${mouseY}px`;
+                }
+            }
         });
 
         class Particle {
