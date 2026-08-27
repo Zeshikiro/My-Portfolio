@@ -595,64 +595,66 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 3. Magnetic Hover Buttons
-    const magneticElements = document.querySelectorAll('.btn, .social-link, .nav-logo');
-    magneticElements.forEach(el => {
-        el.addEventListener('mousemove', (e) => {
-            const rect = el.getBoundingClientRect();
-            const x = e.clientX - rect.left - rect.width / 2;
-            const y = e.clientY - rect.top - rect.height / 2;
+    // 3. Magnetic Hover Buttons (Desktop only)
+    if (window.matchMedia("(pointer: fine)").matches) {
+        const magneticElements = document.querySelectorAll('.btn, .social-link, .nav-logo');
+        magneticElements.forEach(el => {
+            el.addEventListener('mousemove', (e) => {
+                const rect = el.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                
+                // Move element slightly towards cursor
+                el.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px) scale(1.05)`;
+            });
             
-            // Move element slightly towards cursor
-            el.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px) scale(1.05)`;
+            el.addEventListener('mouseleave', () => {
+                el.style.transform = '';
+                // Reset transition for snap back
+                el.style.transition = 'transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+            });
+            
+            el.addEventListener('mouseenter', () => {
+                // Remove transition for immediate mouse follow
+                el.style.transition = 'none';
+            });
         });
-        
-        el.addEventListener('mouseleave', () => {
-            el.style.transform = '';
-            // Reset transition for snap back
-            el.style.transition = 'transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-        });
-        
-        el.addEventListener('mouseenter', () => {
-            // Remove transition for immediate mouse follow
-            el.style.transition = 'none';
-        });
-    });
 
-    // 4. 3D Tilt Cards
-    const tiltCards = document.querySelectorAll('.project-card, .stat-card, .cert-card');
-    tiltCards.forEach(card => {
-        card.classList.add('tilt-card');
-        
-        // Create glare element
-        const glare = document.createElement('div');
-        glare.classList.add('tilt-glare');
-        card.appendChild(glare);
-        
-        card.addEventListener('mousemove', (e) => {
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
+        // 4. 3D Tilt Cards (Desktop only)
+        const tiltCards = document.querySelectorAll('.project-card, .stat-card, .cert-card');
+        tiltCards.forEach(card => {
+            card.classList.add('tilt-card');
             
-            // Calculate tilt based on cursor position relative to center
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
+            // Create glare element
+            const glare = document.createElement('div');
+            glare.classList.add('tilt-glare');
+            card.appendChild(glare);
             
-            const tiltX = ((y - centerY) / centerY) * -3; // Max tilt 3deg
-            const tiltY = ((x - centerX) / centerX) * 3;
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                // Calculate tilt based on cursor position relative to center
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const tiltX = ((y - centerY) / centerY) * -3; // Max tilt 3deg
+                const tiltY = ((x - centerX) / centerX) * 3;
+                
+                card.style.transform = `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateY(-5px)`;
+                
+                // Move glare
+                glare.style.opacity = '1';
+                glare.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 60%)`;
+            });
             
-            card.style.transform = `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateY(-5px)`;
-            
-            // Move glare
-            glare.style.opacity = '1';
-            glare.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 60%)`;
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = '';
+                glare.style.opacity = '0';
+            });
         });
-        
-        card.addEventListener('mouseleave', () => {
-            card.style.transform = '';
-            glare.style.opacity = '0';
-        });
-    });
+    }
 
     // 5. Section Title Decode Effect
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*0123456789';

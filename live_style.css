@@ -1725,10 +1725,6 @@ a {
   .project-featured-body {
     padding: 24px;
   }
-  
-  .terminal-toggle {
-    display: none !important;
-  }
 }
 
 /* ========== INTERACTIVE FEATURES ========== */
@@ -1856,24 +1852,22 @@ a {
 }
 
 /* 3D Tilt Card Glare */
-@media (hover: hover) and (pointer: fine) {
-  .tilt-card {
-    transform-style: preserve-3d;
-    will-change: transform;
-  }
-  .tilt-glare {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 80%);
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.3s;
-    z-index: 10;
-    border-radius: inherit;
-  }
+.tilt-card {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.tilt-glare {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 80%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: 10;
+  border-radius: inherit;
 }
 
 /* Interactive Terminal */
