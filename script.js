@@ -77,6 +77,11 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (arguments[1] !== false) {
             history.pushState({ section: sectionId }, null, `#${sectionId}`);
         }
+
+        // Ensure nav indicator updates when section changes (e.g. via popstate)
+        if (typeof updateNavIndicator === 'function') {
+            setTimeout(updateNavIndicator, 50);
+        }
     }
 
     // Listen for browser back/forward buttons
