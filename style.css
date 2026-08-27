@@ -1729,6 +1729,29 @@ a {
   .project-featured-body {
     padding: 24px;
   }
+  
+  /* Mobile Terminal Responsiveness */
+  .terminal-window {
+    height: 300px;
+    max-height: 45vh; /* Prevent keyboard overlap */
+  }
+  .terminal-title {
+    font-size: 0.75rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 45%;
+  }
+  .terminal-body {
+    font-size: 0.8rem;
+    padding: 12px;
+  }
+  .terminal-prompt {
+    font-size: 0.75rem;
+  }
+  .terminal-input {
+    font-size: 0.75rem;
+  }
 }
 
 /* Mobile performance: kill all heavy blur/backdrop-filter */
