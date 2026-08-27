@@ -260,21 +260,16 @@ document.addEventListener('DOMContentLoaded', () => {
             mouse.y = e.y;
         });
 
-        // Reset mouse to center when it leaves the window
-        document.documentElement.addEventListener('mouseleave', () => {
-            mouse.x = canvas.width / 2;
-            mouse.y = canvas.height / 2;
-            
-            // Also center the custom cursor if it exists
-            if (typeof mouseX !== 'undefined') {
-                mouseX = window.innerWidth / 2;
-                mouseY = window.innerHeight / 2;
-                const cursorDot = document.querySelector('.cursor-dot');
-                if (cursorDot) {
-                    cursorDot.style.left = `${mouseX}px`;
-                    cursorDot.style.top = `${mouseY}px`;
-                }
-            }
+        // Reset mouse when it leaves the window so particles drift back naturally
+        document.addEventListener('mouseleave', () => {
+            mouse.x = null;
+            mouse.y = null;
+        });
+        
+        // Restore mouse tracking when it returns
+        document.addEventListener('mouseenter', (e) => {
+            mouse.x = e.x;
+            mouse.y = e.y;
         });
 
         class Particle {
@@ -588,6 +583,16 @@ document.addEventListener('DOMContentLoaded', () => {
             // Dot follows exactly
             cursorDot.style.left = `${mouseX}px`;
             cursorDot.style.top = `${mouseY}px`;
+        });
+        
+        // Hide cursor when mouse leaves the window
+        document.addEventListener('mouseleave', () => {
+            cursorDot.style.opacity = '0';
+            cursorOutline.style.opacity = '0';
+        });
+        document.addEventListener('mouseenter', () => {
+            cursorDot.style.opacity = '1';
+            cursorOutline.style.opacity = '1';
         });
         
         // Smooth follow for outline

@@ -226,18 +226,21 @@ a {
 
 /* ========== 4. NAVBAR ========== */
 .navbar {
-  position: sticky;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   z-index: 1000;
   transition: background-color var(--transition-normal), backdrop-filter var(--transition-normal);
   background-color: transparent;
+  -webkit-transform: translateZ(0); /* Force GPU layer — fixes mobile in-app browser position:fixed bugs */
+  transform: translateZ(0);
 }
 
 .navbar.scrolled {
-  background-color: var(--glass-bg);
+  background-color: rgba(10, 10, 15, 0.95);
   backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--glass-border);
 }
 
@@ -315,8 +318,8 @@ a {
 
 /* ========== 5. HERO SECTION ========== */
 .hero {
-  min-height: calc(100vh - 70px); /* Fallback for older browsers */
-  min-height: calc(100dvh - 70px); /* Dynamic viewport height fixes in-app browser bugs */
+  min-height: 100vh;
+  min-height: 100dvh;
   position: relative;
   overflow: hidden;
   display: flex;
@@ -1731,6 +1734,23 @@ a {
   
   .terminal-toggle {
     display: none !important;
+  }
+}
+
+/* Mobile performance: reduce heavy blur filters */
+@media (max-width: 768px) {
+  .hero-glow {
+    filter: blur(60px) !important;
+    opacity: 0.1 !important;
+  }
+  .project-featured-glow {
+    filter: blur(60px) !important;
+    opacity: 0.05 !important;
+  }
+  .navbar.scrolled {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background-color: rgba(10, 10, 15, 0.98);
   }
 }
 
