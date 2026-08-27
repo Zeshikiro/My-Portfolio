@@ -171,18 +171,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ========== NAVBAR SCROLL EFFECT ==========
-    // Mobile fix: position:fixed is broken in many mobile browsers.
-    // Fall back to position:absolute + JS scroll tracking.
-    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-    if (isTouchDevice && navbar) {
-        navbar.style.position = 'absolute';
-        const updateNavTop = () => {
-            navbar.style.top = window.scrollY + 'px';
-        };
-        window.addEventListener('scroll', updateNavTop, { passive: true });
-        updateNavTop();
-    }
-
     window.addEventListener('scroll', () => {
         if (window.scrollY > 50) {
             navbar.classList.add('scrolled');

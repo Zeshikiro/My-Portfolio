@@ -1813,8 +1813,10 @@ a {
 }
 
 /* Navbar Sliding Indicator */
-.nav-menu {
-  position: relative;
+@media (min-width: 769px) {
+  .nav-menu {
+    position: relative;
+  }
 }
 .nav-indicator {
   position: absolute;
