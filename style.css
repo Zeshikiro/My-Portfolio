@@ -1729,18 +1729,48 @@ a {
 
 /* ========== INTERACTIVE FEATURES ========== */
 
-/* Enhanced Section Fade-In (Blur to Sharp cascade) */
-@keyframes fadeInSection {
+/* Skeleton Section Reveal */
+.section.active-section,
+.hero.active-section {
+  animation: none; /* Removed the whole section blur fade */
+}
+
+/* Base outline for cards */
+.active-section .project-card,
+.active-section .cert-card,
+.active-section .stat-card,
+.active-section .skill-category,
+.active-section .timeline-content {
+  animation: skeletonBox 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes skeletonBox {
   0% {
     opacity: 0;
-    transform: translateY(30px) scale(0.98);
-    filter: blur(10px);
+    transform: translateY(20px);
+    background: var(--bg-surface-light);
+    border-color: transparent;
   }
   100% {
     opacity: 1;
-    transform: translateY(0) scale(1);
-    filter: blur(0);
+    transform: translateY(0);
   }
+}
+
+/* Delay content inside the cards */
+.active-section .project-card > *,
+.active-section .cert-card > *,
+.active-section .stat-card > *,
+.active-section .skill-category > *,
+.active-section .timeline-content > * {
+  opacity: 0;
+  animation: skeletonContent 0.5s ease forwards;
+  animation-delay: 0.3s;
+}
+
+@keyframes skeletonContent {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
 }
 
 /* Section Title Glitch/Decode Effect */

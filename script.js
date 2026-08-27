@@ -72,8 +72,26 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // Update URL hash without scrolling
-        history.replaceState(null, null, `#${sectionId}`);
+        if (arguments[1] === 'replace') {
+            history.replaceState({ section: sectionId }, null, `#${sectionId}`);
+        } else if (arguments[1] !== false) {
+            history.pushState({ section: sectionId }, null, `#${sectionId}`);
+        }
     }
+
+    // Listen for browser back/forward buttons
+    window.addEventListener('popstate', (e) => {
+        if (e.state && e.state.section) {
+            showSection(e.state.section, false);
+        } else {
+            const hash = window.location.hash.substring(1);
+            if (hash && contentSectionIds.includes(hash)) {
+                showSection(hash, false);
+            } else {
+                showSection('hero', false);
+            }
+        }
+    });
 
     // ========== COUNTER ANIMATION ==========
     const easeOutQuart = t => 1 - (--t) * t * t * t;
@@ -494,9 +512,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // ========== HANDLE INITIAL HASH ==========
     const initialHash = window.location.hash.substring(1);
     if (initialHash && contentSectionIds.includes(initialHash)) {
-        setTimeout(() => showSection(initialHash), 100);
+        setTimeout(() => showSection(initialHash, 'replace'), 100);
     } else {
-        setTimeout(() => showSection('hero'), 100);
+        setTimeout(() => showSection('hero', 'replace'), 100);
     }
 
     // ========== NEW INTERACTIVE FEATURES ==========
@@ -615,8 +633,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const centerX = rect.width / 2;
             const centerY = rect.height / 2;
             
-            const tiltX = ((y - centerY) / centerY) * -10; // Max tilt 10deg
-            const tiltY = ((x - centerX) / centerX) * 10;
+            const tiltX = ((y - centerY) / centerY) * -3; // Max tilt 3deg
+            const tiltY = ((x - centerX) / centerX) * 3;
             
             card.style.transform = `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateY(-5px)`;
             
@@ -702,6 +720,14 @@ document.addEventListener('DOMContentLoaded', () => {
         terminalOverlay.addEventListener('click', (e) => {
             if (e.target === terminalOverlay) toggleTerminal();
         });
+        
+        // Focus input when clicking anywhere in the terminal window
+        const terminalWindow = document.querySelector('.terminal-window');
+        if (terminalWindow) {
+            terminalWindow.addEventListener('click', () => {
+                terminalInput.focus();
+            });
+        }
         
         const printLine = (html, isPrompt = false) => {
             const line = document.createElement('div');
