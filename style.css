@@ -39,6 +39,7 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 80px;
+  overflow-x: clip; /* clip instead of hidden — doesn't create scroll container that breaks position:fixed on mobile */
 }
 
 body {
@@ -46,7 +47,6 @@ body {
   color: var(--text-primary);
   font-family: var(--font-body);
   line-height: 1.5;
-  overflow-x: hidden;
 }
 
 ::selection {
@@ -231,10 +231,8 @@ a {
   left: 0;
   width: 100%;
   z-index: 1000;
-  transition: background-color var(--transition-normal), backdrop-filter var(--transition-normal);
+  transition: background-color var(--transition-normal);
   background-color: transparent;
-  -webkit-transform: translateZ(0); /* Force GPU layer — fixes mobile in-app browser position:fixed bugs */
-  transform: translateZ(0);
 }
 
 .navbar.scrolled {
@@ -1737,20 +1735,28 @@ a {
   }
 }
 
-/* Mobile performance: reduce heavy blur filters */
+/* Mobile performance: kill all heavy blur/backdrop-filter */
 @media (max-width: 768px) {
   .hero-glow {
-    filter: blur(60px) !important;
-    opacity: 0.1 !important;
+    display: none !important;
   }
   .project-featured-glow {
-    filter: blur(60px) !important;
-    opacity: 0.05 !important;
+    display: none !important;
   }
   .navbar.scrolled {
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
     background-color: rgba(10, 10, 15, 0.98);
+  }
+  .cert-accordion {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  .lightbox-overlay {
+    backdrop-filter: none !important;
+  }
+  .terminal-overlay {
+    backdrop-filter: none !important;
   }
 }
 

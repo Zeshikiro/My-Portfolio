@@ -260,16 +260,13 @@ document.addEventListener('DOMContentLoaded', () => {
             mouse.y = e.y;
         });
 
-        // Reset mouse when it leaves the window so particles drift back naturally
-        document.addEventListener('mouseleave', () => {
-            mouse.x = null;
-            mouse.y = null;
-        });
-        
-        // Restore mouse tracking when it returns
-        document.addEventListener('mouseenter', (e) => {
-            mouse.x = e.x;
-            mouse.y = e.y;
+        // Reset mouse when it leaves the browser window so particles stop being repelled
+        window.addEventListener('mouseout', (e) => {
+            // relatedTarget is null when mouse actually leaves the browser window
+            if (!e.relatedTarget && !e.toElement) {
+                mouse.x = null;
+                mouse.y = null;
+            }
         });
 
         class Particle {
@@ -585,12 +582,14 @@ document.addEventListener('DOMContentLoaded', () => {
             cursorDot.style.top = `${mouseY}px`;
         });
         
-        // Hide cursor when mouse leaves the window
-        document.addEventListener('mouseleave', () => {
-            cursorDot.style.opacity = '0';
-            cursorOutline.style.opacity = '0';
+        // Hide cursor when mouse leaves the browser window
+        window.addEventListener('mouseout', (e) => {
+            if (!e.relatedTarget && !e.toElement) {
+                cursorDot.style.opacity = '0';
+                cursorOutline.style.opacity = '0';
+            }
         });
-        document.addEventListener('mouseenter', () => {
+        window.addEventListener('mouseover', () => {
             cursorDot.style.opacity = '1';
             cursorOutline.style.opacity = '1';
         });
