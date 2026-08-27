@@ -1729,10 +1729,6 @@ a {
   .project-featured-body {
     padding: 24px;
   }
-  
-  .terminal-toggle {
-    display: none !important;
-  }
 }
 
 /* Mobile performance: kill all heavy blur/backdrop-filter */

@@ -260,14 +260,15 @@ document.addEventListener('DOMContentLoaded', () => {
             mouse.y = e.y;
         });
 
-        // Reset mouse when it leaves the browser window so particles stop being repelled
-        window.addEventListener('mouseout', (e) => {
-            // relatedTarget is null when mouse actually leaves the browser window
-            if (!e.relatedTarget && !e.toElement) {
-                mouse.x = null;
-                mouse.y = null;
-            }
-        });
+        // Reset particles when mouse leaves the page
+        const resetMouse = () => {
+            mouse.x = null;
+            mouse.y = null;
+        };
+        // mouseleave on documentElement — doesn't bubble, only fires when pointer truly exits the page
+        document.documentElement.addEventListener('mouseleave', resetMouse);
+        // Also reset when user switches tabs/apps
+        window.addEventListener('blur', resetMouse);
 
         class Particle {
             constructor() {
@@ -582,17 +583,18 @@ document.addEventListener('DOMContentLoaded', () => {
             cursorDot.style.top = `${mouseY}px`;
         });
         
-        // Hide cursor when mouse leaves the browser window
-        window.addEventListener('mouseout', (e) => {
-            if (!e.relatedTarget && !e.toElement) {
-                cursorDot.style.opacity = '0';
-                cursorOutline.style.opacity = '0';
-            }
-        });
-        window.addEventListener('mouseover', () => {
+        // Hide cursor when mouse leaves the page
+        const hideCursor = () => {
+            cursorDot.style.opacity = '0';
+            cursorOutline.style.opacity = '0';
+        };
+        const showCursor = () => {
             cursorDot.style.opacity = '1';
             cursorOutline.style.opacity = '1';
-        });
+        };
+        document.documentElement.addEventListener('mouseleave', hideCursor);
+        document.documentElement.addEventListener('mouseenter', showCursor);
+        window.addEventListener('blur', hideCursor);
         
         // Smooth follow for outline
         const animateCursor = () => {
