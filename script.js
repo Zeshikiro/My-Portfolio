@@ -829,11 +829,13 @@ document.addEventListener('DOMContentLoaded', () => {
         
         musicToggle.addEventListener('click', () => {
             if (bgMusic.paused) {
-                bgMusic.play().then(() => {
-                    musicIcon.classList.remove('ri-volume-mute-line');
-                    musicIcon.classList.add('ri-volume-up-line');
-                }).catch(err => {
+                musicIcon.classList.remove('ri-volume-mute-line');
+                musicIcon.classList.add('ri-volume-up-line');
+                bgMusic.play().catch(err => {
                     console.error("Audio playback failed:", err);
+                    musicIcon.classList.remove('ri-volume-up-line');
+                    musicIcon.classList.add('ri-volume-mute-line');
+                    alert("Could not play audio. Please ensure the music file is pushed to GitHub.");
                 });
             } else {
                 bgMusic.pause();
