@@ -1726,3 +1726,228 @@ a {
     padding: 24px;
   }
 }
+
+/* ========== INTERACTIVE FEATURES ========== */
+
+/* Enhanced Section Fade-In (Blur to Sharp cascade) */
+@keyframes fadeInSection {
+  0% {
+    opacity: 0;
+    transform: translateY(30px) scale(0.98);
+    filter: blur(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+/* Section Title Glitch/Decode Effect */
+.glitch-text {
+  position: relative;
+  display: inline-block;
+}
+
+/* Navbar Sliding Indicator */
+.nav-menu {
+  position: relative;
+}
+.nav-indicator {
+  position: absolute;
+  bottom: 0;
+  height: 3px;
+  background: var(--gradient-primary);
+  border-radius: 4px;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0;
+}
+
+/* Custom Cursor */
+@media (hover: hover) and (pointer: fine) {
+  /* Hide default cursor on body */
+  body {
+    cursor: none;
+  }
+  
+  /* Make sure inputs/buttons don't show default pointer unnecessarily, 
+     but we'll keep pointer on a few things or just rely on custom cursor */
+  a, button, input, textarea, .cert-card, .project-card, .stat-card {
+    cursor: none;
+  }
+
+  .cursor-dot {
+    width: 8px;
+    height: 8px;
+    background-color: var(--accent-primary);
+    border-radius: 50%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 9999;
+    transition: width 0.2s, height 0.2s, background-color 0.2s;
+  }
+
+  .cursor-outline {
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(108, 99, 255, 0.5);
+    border-radius: 50%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 9998;
+    transition: width 0.2s, height 0.2s, border-color 0.2s;
+    /* We'll use JS for the position smoothing */
+  }
+  
+  /* Hover state classes */
+  .cursor-hover .cursor-dot {
+    width: 12px;
+    height: 12px;
+    background-color: var(--accent-secondary);
+  }
+  .cursor-hover .cursor-outline {
+    width: 60px;
+    height: 60px;
+    border-color: var(--accent-secondary);
+    background-color: rgba(0, 212, 170, 0.05);
+  }
+}
+
+/* 3D Tilt Card Glare */
+.tilt-card {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.tilt-glare {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 80%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: 10;
+  border-radius: inherit;
+}
+
+/* Interactive Terminal */
+.terminal-toggle {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--bg-surface);
+  border: 1px solid var(--accent-primary);
+  color: var(--accent-primary);
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  cursor: pointer;
+  box-shadow: var(--shadow-glow);
+  transition: all var(--transition-fast);
+}
+.terminal-toggle:hover {
+  transform: scale(1.1);
+  background: var(--accent-primary);
+  color: #fff;
+}
+.terminal-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(10, 10, 15, 0.8);
+  backdrop-filter: blur(8px);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-normal);
+}
+.terminal-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+.terminal-window {
+  width: 90%;
+  max-width: 700px;
+  height: 400px;
+  background: #1e1e1e;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  transform: translateY(20px);
+  transition: transform var(--transition-normal);
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+}
+.terminal-overlay.active .terminal-window {
+  transform: translateY(0);
+}
+.terminal-header {
+  background: #2d2d2d;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+.terminal-buttons {
+  display: flex;
+  gap: 8px;
+}
+.terminal-buttons span {
+  width: 12px; height: 12px; border-radius: 50%; display: block;
+}
+.close-btn { background: #ff5f56; cursor: pointer; }
+.min-btn { background: #ffbd2e; }
+.max-btn { background: #27c93f; }
+.terminal-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #aaa;
+  font-size: 0.85rem;
+}
+.terminal-body {
+  padding: 16px;
+  flex: 1;
+  overflow-y: auto;
+  color: #d4d4d4;
+  font-size: 0.95rem;
+}
+.terminal-line {
+  margin-bottom: 8px;
+}
+.terminal-input-line {
+  display: flex;
+  margin-top: 8px;
+}
+.terminal-prompt {
+  color: #4af626;
+  margin-right: 8px;
+  white-space: nowrap;
+}
+.terminal-input {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-family: inherit;
+  font-size: inherit;
+  flex: 1;
+  outline: none;
+}

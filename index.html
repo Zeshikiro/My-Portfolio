@@ -20,6 +20,7 @@
         <div class="nav-container">
             <a href="#hero" class="nav-logo">JRN<span class="accent">.</span></a>
             <ul class="nav-menu" id="nav-menu">
+                <div class="nav-indicator" id="nav-indicator"></div>
                 <li><a href="#about" class="nav-link">About</a></li>
                 <li><a href="#skills" class="nav-link">Skills</a></li>
                 <li><a href="#projects" class="nav-link">Projects</a></li>
@@ -351,13 +352,13 @@
                 <div class="project-card reveal">
                     <div class="project-card-header">
                         <div class="project-card-icon"><i class="ri-global-line"></i></div>
-                        <a href="https://github.com/Zeshikiro" target="_blank" rel="noopener noreferrer" class="project-link" aria-label="View project">
+                        <a href="https://step-up-actual.vercel.app/" target="_blank" rel="noopener noreferrer" class="project-link" aria-label="View project">
                             <i class="ri-external-link-line"></i>
                         </a>
                     </div>
-                    <h4 class="project-card-title">Personal Website</h4>
+                    <h4 class="project-card-title">Project Website</h4>
                     <p class="project-card-desc">
-                        Built personal websites to showcase skills and experiment with web 
+                        Built project websites to showcase skills and experiment with web 
                         technologies, focusing on modern design principles and responsive layouts.
                     </p>
                     <div class="project-tags">
@@ -772,6 +773,35 @@
             </div>
         </div>
     </footer>
+
+    <!-- ========== INTERACTIVE TERMINAL ========== -->
+    <button id="terminal-toggle" class="terminal-toggle" aria-label="Open Terminal">
+        <i class="ri-terminal-line"></i>
+    </button>
+    <div class="terminal-overlay" id="terminal-overlay">
+        <div class="terminal-window">
+            <div class="terminal-header">
+                <div class="terminal-buttons">
+                    <span class="close-btn" id="terminal-close"></span>
+                    <span class="min-btn"></span>
+                    <span class="max-btn"></span>
+                </div>
+                <div class="terminal-title">guest@jrn-portfolio:~</div>
+            </div>
+            <div class="terminal-body" id="terminal-body">
+                <div class="terminal-line">Welcome to JRN OS v1.0.0</div>
+                <div class="terminal-line">Type <span class="accent">'help'</span> to see available commands.</div>
+                <div class="terminal-input-line">
+                    <span class="terminal-prompt">guest@jrn-portfolio:~$</span>
+                    <input type="text" id="terminal-input" class="terminal-input" autocomplete="off" spellcheck="false">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== CUSTOM CURSOR ========== -->
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-outline" id="cursor-outline"></div>
 
     <script src="script.js"></script>
 </body>
