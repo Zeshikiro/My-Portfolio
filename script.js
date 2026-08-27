@@ -31,15 +31,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const target = document.getElementById(sectionId);
         if (!target) return;
 
-        target.style.display = '';
-        void target.offsetHeight; // force reflow for animation
+        // Fix mobile rendering glitches by forcing scroll to top immediately
+        window.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: 'instant'
+        });
+
+        if (sectionId === 'hero') {
+            target.style.display = 'flex';
+        } else {
+            target.style.display = 'block';
+        }
         target.classList.add('active-section');
         activeSection = sectionId;
-
-        // Scroll to the section
-        setTimeout(() => {
-            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 50);
 
         // Trigger animations only on first visit
         if (!animatedSections.has(sectionId)) {
@@ -253,6 +258,12 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('mousemove', (e) => {
             mouse.x = e.x;
             mouse.y = e.y;
+        });
+
+        // Reset mouse to center when it leaves the window
+        document.documentElement.addEventListener('mouseleave', () => {
+            mouse.x = canvas.width / 2;
+            mouse.y = canvas.height / 2;
         });
 
         class Particle {
