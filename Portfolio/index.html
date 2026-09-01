@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>John Ryan Nicolas | IT Student &amp; Developer</title>
+    <meta name="description" content="Portfolio of John Ryan Nicolas — IT Student, Lead Developer of STEP-UP AR App. Head in the clouds. Grounded in data.">
+    <meta name="keywords" content="John Ryan Nicolas, portfolio, IT student, developer, STEP-UP, augmented reality">
+    <meta name="author" content="John Ryan Nicolas">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ========== NAVBAR ========== -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#hero" class="nav-logo">JRN<span class="accent">.</span></a>
+            <ul class="nav-menu" id="nav-menu">
+                <div class="nav-indicator" id="nav-indicator"></div>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#skills" class="nav-link">Skills</a></li>
+                <li><a href="#projects" class="nav-link">Projects</a></li>
+                <li><a href="#education" class="nav-link">Education</a></li>
+                <li><a href="#certifications" class="nav-link">Certifications</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+            <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ========== HERO ========== -->
+    <section class="hero" id="hero">
+        <canvas id="particle-canvas"></canvas>
+        <div class="hero-glow hero-glow--1"></div>
+        <div class="hero-glow hero-glow--2"></div>
+        <div class="hero-content">
+            <div class="hero-badge reveal">
+                <i class="ri-code-s-slash-line"></i>
+                <span>IT Student &amp; Developer</span>
+            </div>
+            <h1 class="hero-name reveal">
+                John Ryan<br>
+                <span class="gradient-text">Nicolas</span>
+            </h1>
+            <div class="hero-typing reveal">
+                <span id="typed-text"></span><span class="typing-cursor">|</span>
+            </div>
+            <p class="hero-tagline reveal">&ldquo;Head in the clouds. Grounded in data.&rdquo;</p>
+            <div class="hero-cta reveal">
+                <a href="#projects" class="btn btn-primary">
+                    <i class="ri-folder-3-line"></i>
+                    <span>View Projects</span>
+                </a>
+                <a href="#contact" class="btn btn-outline">
+                    <i class="ri-mail-send-line"></i>
+                    <span>Contact Me</span>
+                </a>
+            </div>
+            <div class="hero-socials reveal">
+                <a href="https://github.com/Zeshikiro" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="GitHub Profile">
+                    <i class="ri-github-fill"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/john-ryan-nicolas-21b058332/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="LinkedIn Profile">
+                    <i class="ri-linkedin-box-fill"></i>
+                </a>
+                <a href="https://www.facebook.com/johnryan.nicolas.3/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Facebook Profile">
+                    <i class="ri-facebook-circle-fill"></i>
+                </a>
+                <a href="https://www.instagram.com/zeshikiro/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Instagram Profile">
+                    <i class="ri-instagram-fill"></i>
+                </a>
+                <a href="https://www.tiktok.com/@zeshikiro" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="TikTok Profile">
+                    <i class="ri-tiktok-fill"></i>
+                </a>
+                <a href="mailto:johnryannicolas43@gmail.com" class="social-link" aria-label="Send Email">
+                    <i class="ri-mail-fill"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== ABOUT ========== -->
+    <section class="section" id="about">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-tag"><i class="ri-user-3-line"></i> About Me</span>
+                <h2 class="section-title">Get to Know <span class="gradient-text">Me</span></h2>
+            </div>
+            <div class="about-grid">
+                <div class="about-text reveal">
+                    <p>
+                        Hi there! I'm <strong>John Ryan Nicolas</strong>, an IT student at 
+                        <strong>Pampanga State Agricultural University</strong> with a passion for 
+                        building meaningful digital experiences. I served as the 
+                        <strong>Lead Developer</strong> of STEP-UP — an Augmented Reality mobile 
+                        application designed to promote physical activity among university students.
+                    </p>
+                    <p>
+                        My journey in tech started with HTML &amp; CSS, and I'm continuously 
+                        expanding my skillset into Python, Java, databases, and Linux systems. 
+                        I believe in learning by doing — every project is an opportunity to grow 
+                        and every bug is a lesson in disguise.
+                    </p>
+                </div>
+                <div class="about-stats">
+                    <div class="stat-card reveal" style="--delay: 0">
+                        <div class="stat-icon"><i class="ri-rocket-2-line"></i></div>
+                        <div class="stat-number" data-count="1">0</div>
+                        <div class="stat-label">Capstone Project</div>
+                    </div>
+                    <div class="stat-card reveal" style="--delay: 1">
+                        <div class="stat-icon"><i class="ri-team-line"></i></div>
+                        <div class="stat-number" data-count="1">0</div>
+                        <div class="stat-label">Lead Developer Role</div>
+                    </div>
+                    <div class="stat-card reveal" style="--delay: 2">
+                        <div class="stat-icon"><i class="ri-code-box-line"></i></div>
+                        <div class="stat-number" data-count="12">0</div>
+                        <div class="stat-label">Technologies</div>
+                    </div>
+                    <div class="stat-card reveal" style="--delay: 3">
+                        <div class="stat-icon"><i class="ri-git-repository-line"></i></div>
+                        <div class="stat-number" data-count="3">0</div>
+                        <div class="stat-label">Projects</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== SKILLS ========== -->
+    <section class="section section-alt" id="skills">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-tag"><i class="ri-tools-line"></i> Skills</span>
+                <h2 class="section-title">My <span class="gradient-text">Tech Stack</span></h2>
+            </div>
+            <div class="skills-grid">
+                <!-- Languages & Web -->
+                <div class="skill-category reveal">
+                    <h3 class="skill-category-title">
+                        <i class="ri-code-s-slash-line"></i> Languages &amp; Web
+                    </h3>
+                    <div class="skill-items">
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <i class="ri-html5-fill" style="color:#e44d26"></i>
+                                <span>HTML</span>
+                                <span class="skill-badge foundational">Foundational</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-progress" data-width="50"></div></div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <i class="ri-css3-fill" style="color:#264de4"></i>
+                                <span>CSS</span>
+                                <span class="skill-badge foundational">Foundational</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-progress" data-width="50"></div></div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <i class="ri-code-line" style="color:#3776AB"></i>
+                                <span>Python</span>
+                                <span class="skill-badge learning">Learning</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-progress" data-width="30"></div></div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <i class="ri-cup-fill" style="color:#f89820"></i>
+                                <span>Java</span>
+                                <span class="skill-badge learning">Learning</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-progress" data-width="30"></div></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Database -->
+                <div class="skill-category reveal">
+                    <h3 class="skill-category-title">
+                        <i class="ri-database-2-line"></i> Database
+                    </h3>
+                    <div class="skill-items">
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <i class="ri-database-2-fill" style="color:#00758f"></i>
+                                <span>MySQL</span>
+                                <span class="skill-badge basic">Basic</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-progress" data-width="45"></div></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Tools & Systems -->
+                <div class="skill-category reveal">
+                    <h3 class="skill-category-title">
+                        <i class="ri-terminal-box-line"></i> Tools &amp; Systems
+                    </h3>
+                    <div class="skill-items">
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <i class="ri-ubuntu-fill" style="color:#E95420"></i>
+                                <span>Linux Ubuntu</span>
+                                <span class="skill-badge basic">Basic</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-progress" data-width="45"></div></div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <i class="ri-git-branch-line" style="color:#F05032"></i>
+                                <span>Git &amp; GitHub</span>
+                                <span class="skill-badge basic">Basic</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-progress" data-width="45"></div></div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <i class="ri-cpu-line" style="color:#38bdf8"></i>
+                                <span>Computer Hardware</span>
+                                <span class="skill-badge basic">Basic</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-progress" data-width="50"></div></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- AI & Emerging Tech -->
+                <div class="skill-category reveal">
+                    <h3 class="skill-category-title">
+                        <i class="ri-robot-2-line"></i> AI &amp; Emerging Tech
+                    </h3>
+                    <div class="skill-items">
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <i class="ri-sparkling-2-fill" style="color:#a78bfa"></i>
+                                <span>AI-Assisted Development</span>
+                                <span class="skill-badge basic">Basic</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-progress" data-width="50"></div></div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <i class="ri-robot-fill" style="color:#10b981"></i>
+                                <span>Prompt Engineering</span>
+                                <span class="skill-badge basic">Basic</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-progress" data-width="45"></div></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Productivity & Office -->
+                <div class="skill-category reveal">
+                    <h3 class="skill-category-title">
+                        <i class="ri-file-text-line"></i> Productivity &amp; Office
+                    </h3>
+                    <div class="skill-items">
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <i class="ri-file-word-fill" style="color:#2B579A"></i>
+                                <span>Microsoft Word</span>
+                                <span class="skill-badge foundational">Proficient</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-progress" data-width="70"></div></div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <i class="ri-file-ppt-fill" style="color:#D24726"></i>
+                                <span>Microsoft PowerPoint</span>
+                                <span class="skill-badge foundational">Proficient</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-progress" data-width="70"></div></div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <i class="ri-file-excel-fill" style="color:#217346"></i>
+                                <span>Microsoft Excel</span>
+                                <span class="skill-badge foundational">Proficient</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-progress" data-width="70"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== PROJECTS ========== -->
+    <section class="section" id="projects">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-tag"><i class="ri-folder-3-line"></i> Projects</span>
+                <h2 class="section-title">Featured <span class="gradient-text">Work</span></h2>
+            </div>
+            <!-- Featured Project: STEP-UP -->
+            <div class="project-featured reveal">
+                <div class="project-featured-glow"></div>
+                <div class="project-featured-badge">
+                    <i class="ri-star-fill"></i> Capstone Project
+                </div>
+                <div class="project-featured-body">
+                    <div class="project-featured-content">
+                        <h3 class="project-title">STEP-UP</h3>
+                        <p class="project-subtitle">An Augmented Reality Mobile Application for Promoting Physical Activity Among University Students</p>
+                        <p class="project-description">
+                            A gamified step tracker unlike any other — STEP-UP uses 
+                            <strong>Augmented Reality</strong> with an embedded avatar for a 
+                            more entertaining and engaging approach to daily physical activities. 
+                            Designed to motivate university students to stay active through 
+                            interactive gameplay and real-time tracking.
+                        </p>
+                        <div class="project-tags">
+                            <span class="tag">Augmented Reality</span>
+                            <span class="tag">Mobile App</span>
+                            <span class="tag">Gamification</span>
+                            <span class="tag">Step Tracking</span>
+                        </div>
+                        <div class="project-role">
+                            <i class="ri-user-star-fill"></i>
+                            <span>Lead Developer</span>
+                        </div>
+                    </div>
+                    <div class="project-featured-visual">
+                        <div class="phone-mockup">
+                            <div class="phone-notch"></div>
+                            <div class="phone-screen">
+                                <div class="phone-app-icon">
+                                    <i class="ri-walk-line"></i>
+                                </div>
+                                <span class="phone-app-name">STEP-UP</span>
+                                <div class="phone-steps">
+                                    <span class="phone-step-count">8,432</span>
+                                    <span class="phone-step-label">steps today</span>
+                                </div>
+                                <div class="phone-ar-badge">
+                                    <i class="ri-augmented-reality-line"></i> AR Active
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Other Projects Grid -->
+            <div class="projects-grid">
+                <div class="project-card reveal">
+                    <div class="project-card-header">
+                        <div class="project-card-icon"><i class="ri-global-line"></i></div>
+                        <a href="https://step-up-actual.vercel.app/" target="_blank" rel="noopener noreferrer" class="project-link" aria-label="View project">
+                            <i class="ri-external-link-line"></i>
+                        </a>
+                    </div>
+                    <h4 class="project-card-title">Project Website</h4>
+                    <p class="project-card-desc">
+                        Built project websites to showcase skills and experiment with web 
+                        technologies, focusing on modern design principles and responsive layouts.
+                    </p>
+                    <div class="project-tags">
+                        <span class="tag">HTML</span>
+                        <span class="tag">CSS</span>
+                        <span class="tag">Web Design</span>
+                    </div>
+                </div>
+                <div class="project-card reveal">
+                    <div class="project-card-header">
+                        <div class="project-card-icon"><i class="ri-github-fill"></i></div>
+                        <a href="https://github.com/Zeshikiro" target="_blank" rel="noopener noreferrer" class="project-link" aria-label="View GitHub">
+                            <i class="ri-external-link-line"></i>
+                        </a>
+                    </div>
+                    <h4 class="project-card-title">GitHub Portfolio</h4>
+                    <p class="project-card-desc">
+                        Actively contributing to projects and maintaining repositories on GitHub. 
+                        Exploring open source and version control workflows.
+                    </p>
+                    <div class="project-tags">
+                        <span class="tag">Git</span>
+                        <span class="tag">Open Source</span>
+                        <span class="tag">Collaboration</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== EDUCATION ========== -->
+    <section class="section section-alt" id="education">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-tag"><i class="ri-graduation-cap-line"></i> Education</span>
+                <h2 class="section-title">My <span class="gradient-text">Journey</span></h2>
+            </div>
+            <div class="timeline">
+                <div class="timeline-line"></div>
+                <div class="timeline-item reveal">
+                    <div class="timeline-dot">
+                        <i class="ri-graduation-cap-fill"></i>
+                    </div>
+                    <div class="timeline-content">
+                        <span class="timeline-badge college">College</span>
+                        <h3 class="timeline-title">Pampanga State Agricultural University</h3>
+                        <p class="timeline-subtitle">Bachelor of Science in Information Technology</p>
+                        <p class="timeline-desc">
+                            Lead Developer of the STEP-UP capstone project. Building expertise 
+                            in software development, database management, and systems administration. 
+                            Actively learning and applying new technologies.
+                        </p>
+                    </div>
+                </div>
+                <div class="timeline-item reveal">
+                    <div class="timeline-dot">
+                        <i class="ri-book-open-line"></i>
+                    </div>
+                    <div class="timeline-content">
+                        <span class="timeline-badge senior-high">Senior High School</span>
+                        <h3 class="timeline-title">Gov. Rafael L. Lazatin Integrated School</h3>
+                        <p class="timeline-desc">
+                            Completed secondary education in Angeles City, gaining essential academic skills and preparing for higher learning in technology.
+                        </p>
+                    </div>
+                </div>
+                <div class="timeline-item reveal">
+                    <div class="timeline-dot">
+                        <i class="ri-school-fill"></i>
+                    </div>
+                    <div class="timeline-content">
+                        <span class="timeline-badge highschool">Junior High School</span>
+                        <h3 class="timeline-title">Holy Angel University</h3>
+                        <p class="timeline-desc">
+                            Built a strong academic foundation and discovered a passion for 
+                            technology and problem-solving that would shape my career path.
+                        </p>
+                    </div>
+                </div>
+                <div class="timeline-item reveal">
+                    <div class="timeline-dot">
+                        <i class="ri-book-fill"></i>
+                    </div>
+                    <div class="timeline-content">
+                        <span class="timeline-badge elementary">Elementary</span>
+                        <h3 class="timeline-title">Marisol Bliss Elementary School</h3>
+                        <p class="timeline-desc">
+                            Began early education journey in Barangay Ninoy Aquino, Angeles City.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== CERTIFICATIONS ========== -->
+    <section class="section" id="certifications">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-tag"><i class="ri-award-line"></i> Certifications</span>
+                <h2 class="section-title">Certificates &amp; <span class="gradient-text">Achievements</span></h2>
+            </div>
+            <!-- Accordion Category: Technical & Programming -->
+            <div class="cert-accordion reveal">
+                <button class="cert-accordion-header" aria-expanded="false">
+                    <div class="cert-accordion-label">
+                        <i class="ri-code-box-line"></i>
+                        <span>Technical &amp; Programming</span>
+                        <span class="cert-accordion-count">5 Certificates</span>
+                    </div>
+                    <i class="ri-arrow-down-s-line cert-accordion-arrow"></i>
+                </button>
+                <div class="cert-accordion-content">
+                    <div class="cert-accordion-grid">
+                        <div class="cert-card" data-cert="sololearn-sql">
+                            <div class="cert-image">
+                                <img src="Photos/sololearn-sql.png" alt="Introduction to SQL Certificate">
+                            </div>
+                            <div class="cert-info">
+                                <h4 class="cert-title">Introduction to SQL</h4>
+                                <p class="cert-org"><i class="ri-building-2-line"></i> Sololearn</p>
+                                <p class="cert-date"><i class="ri-calendar-event-line"></i> October 5, 2024</p>
+                                <p class="cert-desc">Successfully completed the course by demonstrating theoretical and practical understanding of Introduction to SQL.</p>
+                            </div>
+                            <div class="cert-expand">
+                                <i class="ri-zoom-in-line"></i> View Certificate
+                            </div>
+                        </div>
+                        <div class="cert-card" data-cert="sololearn-java">
+                            <div class="cert-image">
+                                <img src="Photos/sololearn-java.png" alt="Introduction to Java Certificate">
+                            </div>
+                            <div class="cert-info">
+                                <h4 class="cert-title">Introduction to Java</h4>
+                                <p class="cert-org"><i class="ri-building-2-line"></i> Sololearn</p>
+                                <p class="cert-date"><i class="ri-calendar-event-line"></i> September 25, 2024</p>
+                                <p class="cert-desc">Successfully completed the course by demonstrating theoretical and practical understanding of Introduction to Java.</p>
+                            </div>
+                            <div class="cert-expand">
+                                <i class="ri-zoom-in-line"></i> View Certificate
+                            </div>
+                        </div>
+                        <div class="cert-card" data-cert="google-workspace">
+                            <div class="cert-image">
+                                <img src="Photos/Google-WorkSpace.jpeg" alt="Google Workspace Certificate">
+                            </div>
+                            <div class="cert-info">
+                                <h4 class="cert-title">Google Workspace</h4>
+                                <p class="cert-org"><i class="ri-building-2-line"></i> DICT Pampanga</p>
+                                <p class="cert-date"><i class="ri-calendar-event-line"></i> August 11, 2026</p>
+                                <p class="cert-desc">Successfully participated in the three-hour ICT Skills Training on Google Workspace conducted by the ICT Literacy and Competency Development Bureau.</p>
+                            </div>
+                            <div class="cert-expand">
+                                <i class="ri-zoom-in-line"></i> View Certificate
+                            </div>
+                        </div>
+                        <div class="cert-card" data-cert="game-dev">
+                            <div class="cert-image">
+                                <img src="Photos/Press_Start_GameDevelopment.jpeg" alt="Game Development Certificate">
+                            </div>
+                            <div class="cert-info">
+                                <h4 class="cert-title">Press Start: Game Development</h4>
+                                <p class="cert-org"><i class="ri-building-2-line"></i> DICT</p>
+                                <p class="cert-date"><i class="ri-calendar-event-line"></i> 2026</p>
+                                <p class="cert-desc">Participated in the Press Start: Game Development course covering fundamental concepts of game design and development.</p>
+                            </div>
+                            <div class="cert-expand">
+                                <i class="ri-zoom-in-line"></i> View Certificate
+                            </div>
+                        </div>
+                        <div class="cert-card" data-cert="psite-ircite">
+                            <div class="cert-image">
+                                <img src="Photos/PSITE_ITMarketing.png" alt="PSITE IRCITE Participation Award">
+                            </div>
+                            <div class="cert-info">
+                                <h4 class="cert-title">IRCITE Participation Award</h4>
+                                <p class="cert-org"><i class="ri-building-2-line"></i> PSITE</p>
+                                <p class="cert-date"><i class="ri-calendar-event-line"></i> 2026</p>
+                                <p class="cert-desc">Awarded for active participation in the International Research Conference on Information Technology Education (IRCITE).</p>
+                            </div>
+                            <div class="cert-expand">
+                                <i class="ri-zoom-in-line"></i> View Certificate
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Accordion Category: Leadership & Civic Engagement -->
+            <div class="cert-accordion reveal">
+                <button class="cert-accordion-header" aria-expanded="false">
+                    <div class="cert-accordion-label">
+                        <i class="ri-hand-heart-line"></i>
+                        <span>Leadership &amp; Civic Engagement</span>
+                        <span class="cert-accordion-count">1 Certificate</span>
+                    </div>
+                    <i class="ri-arrow-down-s-line cert-accordion-arrow"></i>
+                </button>
+                <div class="cert-accordion-content">
+                    <div class="cert-accordion-grid">
+                        <div class="cert-card" data-cert="0">
+                            <div class="cert-image">
+                                <img src="Photos/(kkdt)Leadership Cert.png" alt="KKDT Leadership Certificate">
+                            </div>
+                            <div class="cert-info">
+                                <h4 class="cert-title">Kabataan Kontra Droga at Terorismo (KKDT)</h4>
+                                <p class="cert-org"><i class="ri-building-2-line"></i> PNP Angeles City Mobile Force Company</p>
+                                <p class="cert-date"><i class="ri-calendar-event-line"></i> May 9, 2023</p>
+                                <p class="cert-desc">Participated in the KKDT civic leadership program promoting a drug-free and peaceful society, demonstrating dedication to community service and youth advocacy.</p>
+                            </div>
+                            <div class="cert-expand">
+                                <i class="ri-zoom-in-line"></i> View Certificate
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Accordion Category: Military Training & ROTC -->
+            <div class="cert-accordion reveal">
+                <button class="cert-accordion-header" aria-expanded="false">
+                    <div class="cert-accordion-label">
+                        <i class="ri-shield-star-line"></i>
+                        <span>Military Training &amp; ROTC</span>
+                        <span class="cert-accordion-count">3 Certificates</span>
+                    </div>
+                    <i class="ri-arrow-down-s-line cert-accordion-arrow"></i>
+                </button>
+                <div class="cert-accordion-content">
+                    <div class="cert-accordion-grid">
+                        <div class="cert-card" data-cert="basic-rotc">
+                            <div class="cert-image">
+                                <img src="Photos/basic_cadet.png" alt="Basic ROTC Certificate of Graduation">
+                            </div>
+                            <div class="cert-info">
+                                <h4 class="cert-title">Basic ROTC Certificate of Graduation</h4>
+                                <p class="cert-org"><i class="ri-building-2-line"></i> NSTP-ROTC, 303rd CDC RESCOM, PSAU</p>
+                                <p class="cert-date"><i class="ri-calendar-event-line"></i> May 18, 2024</p>
+                                <p class="cert-desc">Successfully completed the Basic Reserve Officers' Training Corps program under the National Service Training Program at Pampanga State Agricultural University.</p>
+                            </div>
+                            <div class="cert-expand">
+                                <i class="ri-zoom-in-line"></i> View Certificate
+                            </div>
+                        </div>
+                        <div class="cert-card" data-cert="2">
+                            <div class="cert-image">
+                                <img src="Photos/ROTC cert.png" alt="Cadet Officer Qualifying Course Certificate">
+                            </div>
+                            <div class="cert-info">
+                                <h4 class="cert-title">Cadet Officer Qualifying Course (C/2LT)</h4>
+                                <p class="cert-org"><i class="ri-building-2-line"></i> ROTC 303rd CDC, 3rd RCDG, Philippine Army</p>
+                                <p class="cert-date"><i class="ri-calendar-event-line"></i> April 5, 2024</p>
+                                <p class="cert-desc">Completed the Cadet Officer Qualifying Course Class 01-2024 in Military Science and Tactics, earning the rank of Cadet 2nd Lieutenant (C/2LT).</p>
+                            </div>
+                            <div class="cert-expand">
+                                <i class="ri-zoom-in-line"></i> View Certificate
+                            </div>
+                        </div>
+                        <div class="cert-card" data-cert="3">
+                            <div class="cert-image">
+                                <img src="Photos/rsct-arapt.png" alt="RSCT &amp; ARAPT Summer Camp Training Certificate">
+                            </div>
+                            <div class="cert-info">
+                                <h4 class="cert-title">ROTC Summer Camp &amp; Advance ARAPT Training</h4>
+                                <p class="cert-org"><i class="ri-building-2-line"></i> 3rd RCDG RESCOM, Philippine Army</p>
+                                <p class="cert-date"><i class="ri-calendar-event-line"></i> June 25, 2024</p>
+                                <p class="cert-desc">Satisfactorily completed the RSCT/MS-3 and Advance ROTC Academic Phase Training (ARAPT/MS 31&amp;32) conducted at Camp General Servillano A Aquino, Tarlac City.</p>
+                            </div>
+                            <div class="cert-expand">
+                                <i class="ri-zoom-in-line"></i> View Certificate
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== LIGHTBOX MODAL ========== -->
+    <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Certificate viewer">
+        <div class="lightbox-overlay" id="lightbox-overlay"></div>
+        <button class="lightbox-close" id="lightbox-close" aria-label="Close lightbox">
+            <i class="ri-close-line"></i>
+        </button>
+        <button class="lightbox-nav lightbox-prev" id="lightbox-prev" aria-label="Previous certificate">
+            <i class="ri-arrow-left-s-line"></i>
+        </button>
+        <button class="lightbox-nav lightbox-next" id="lightbox-next" aria-label="Next certificate">
+            <i class="ri-arrow-right-s-line"></i>
+        </button>
+        <div class="lightbox-content" id="lightbox-content">
+            <div class="lightbox-image-wrap">
+                <img id="lightbox-img" src="" alt="Certificate">
+            </div>
+            <div class="lightbox-info">
+                <h3 id="lightbox-title"></h3>
+                <p id="lightbox-desc"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== CONTACT ========== -->
+    <section class="section section-alt" id="contact">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-tag"><i class="ri-mail-send-line"></i> Contact</span>
+                <h2 class="section-title">Get in <span class="gradient-text">Touch</span></h2>
+                <p class="section-subtitle">Have a question or want to work together? Let's connect!</p>
+            </div>
+            <div class="contact-grid">
+                <form class="contact-form reveal" id="contact-form" novalidate>
+                    <div class="form-group">
+                        <input type="text" id="form-name" name="name" required autocomplete="name" placeholder=" ">
+                        <label for="form-name"><i class="ri-user-line"></i> Your Name</label>
+                        <div class="form-line"></div>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" id="form-email" name="email" required autocomplete="email" placeholder=" ">
+                        <label for="form-email"><i class="ri-mail-line"></i> Your Email</label>
+                        <div class="form-line"></div>
+                    </div>
+                    <div class="form-group">
+                        <textarea id="form-message" name="message" rows="5" required placeholder=" "></textarea>
+                        <label for="form-message"><i class="ri-message-3-line"></i> Your Message</label>
+                        <div class="form-line"></div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-submit" id="btn-submit">
+                        <span class="btn-text"><i class="ri-send-plane-fill"></i> Send Message</span>
+                        <span class="btn-loading"><i class="ri-loader-4-line"></i> Sending...</span>
+                        <span class="btn-success"><i class="ri-check-line"></i> Sent!</span>
+                    </button>
+                </form>
+                <div class="contact-info reveal">
+                    <div class="contact-card">
+                        <div class="contact-card-icon">
+                            <i class="ri-mail-fill"></i>
+                        </div>
+                        <div class="contact-card-content">
+                            <h4>Email</h4>
+                            <a href="mailto:johnryannicolas43@gmail.com">johnryannicolas43@gmail.com</a>
+                        </div>
+                    </div>
+                    <div class="contact-card contact-dropdown" id="social-dropdown">
+                        <div class="contact-card-header">
+                            <div class="contact-card-icon">
+                                <i class="ri-share-line"></i>
+                            </div>
+                            <div class="contact-card-content">
+                                <h4>Social Media</h4>
+                                <span>Connect with me</span>
+                            </div>
+                            <i class="ri-arrow-down-s-line dropdown-arrow"></i>
+                        </div>
+                        <div class="contact-dropdown-content">
+                            <a href="https://github.com/Zeshikiro" target="_blank" rel="noopener noreferrer" class="social-dropdown-item">
+                                <i class="ri-github-fill"></i> GitHub
+                            </a>
+                            <a href="https://www.linkedin.com/in/john-ryan-nicolas-21b058332/" target="_blank" rel="noopener noreferrer" class="social-dropdown-item">
+                                <i class="ri-linkedin-box-fill"></i> LinkedIn
+                            </a>
+                            <a href="https://www.facebook.com/johnryan.nicolas.3/" target="_blank" rel="noopener noreferrer" class="social-dropdown-item">
+                                <i class="ri-facebook-circle-fill"></i> Facebook
+                            </a>
+                            <a href="https://www.instagram.com/zeshikiro/" target="_blank" rel="noopener noreferrer" class="social-dropdown-item">
+                                <i class="ri-instagram-fill"></i> Instagram
+                            </a>
+                            <a href="https://www.tiktok.com/@zeshikiro" target="_blank" rel="noopener noreferrer" class="social-dropdown-item">
+                                <i class="ri-tiktok-fill"></i> TikTok
+                            </a>
+                        </div>
+                    </div>
+                    <div class="contact-card">
+                        <div class="contact-card-icon">
+                            <i class="ri-map-pin-fill"></i>
+                        </div>
+                        <div class="contact-card-content">
+                            <h4>Location</h4>
+                            <span>Marisol Barangay Ninoy Aquino, Angeles City, Pampanga, Philippines</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <a href="#hero" class="footer-logo">JRN<span class="accent">.</span></a>
+                <p class="footer-text">&copy; 2026 John Ryan Nicolas. All rights reserved.</p>
+                <div class="footer-socials">
+                    <a href="https://github.com/Zeshikiro" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                        <i class="ri-github-fill"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/in/john-ryan-nicolas-21b058332/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                        <i class="ri-linkedin-box-fill"></i>
+                    </a>
+                    <a href="https://www.facebook.com/johnryan.nicolas.3/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                        <i class="ri-facebook-circle-fill"></i>
+                    </a>
+                    <a href="https://www.instagram.com/zeshikiro/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                        <i class="ri-instagram-fill"></i>
+                    </a>
+                    <a href="https://www.tiktok.com/@zeshikiro" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+                        <i class="ri-tiktok-fill"></i>
+                    </a>
+                    <a href="mailto:johnryannicolas43@gmail.com" aria-label="Email">
+                        <i class="ri-mail-fill"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ========== INTERACTIVE TERMINAL ========== -->
+    <button id="terminal-toggle" class="terminal-toggle" aria-label="Open Terminal">
+        <i class="ri-terminal-line"></i>
+    </button>
+    <div class="terminal-overlay" id="terminal-overlay">
+        <div class="terminal-window">
+            <div class="terminal-header">
+                <div class="terminal-buttons">
+                    <span class="close-btn" id="terminal-close"></span>
+                    <span class="min-btn"></span>
+                    <span class="max-btn"></span>
+                </div>
+                <div class="terminal-title">guest@jrn-portfolio:~</div>
+            </div>
+            <div class="terminal-body" id="terminal-body">
+                <div class="terminal-line">Welcome to JRN OS v1.0.0</div>
+                <div class="terminal-line">Type <span class="accent">'help'</span> to see available commands.</div>
+                <div class="terminal-input-line">
+                    <span class="terminal-prompt">guest@jrn-portfolio:~$</span>
+                    <input type="text" id="terminal-input" class="terminal-input" autocomplete="off" spellcheck="false">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== CUSTOM CURSOR ========== -->
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-outline" id="cursor-outline"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
