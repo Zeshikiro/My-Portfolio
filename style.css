@@ -327,12 +327,13 @@ a {
 }
 
 #particle-canvas {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
 }
 
 .hero-glow {
@@ -1781,43 +1782,54 @@ a {
 
 /* ========== INTERACTIVE FEATURES ========== */
 
-/* Skeleton Section Reveal */
-.section.active-section,
-.hero.active-section {
-  animation: none; /* Removed the whole section blur fade */
+/* True Skeleton Loading */
+.skeleton-mode .project-card,
+.skeleton-mode .cert-card,
+.skeleton-mode .stat-card,
+.skeleton-mode .skill-category,
+.skeleton-mode .timeline-content,
+.skeleton-mode .section-title,
+.skeleton-mode .section-subtitle,
+.skeleton-mode p,
+.skeleton-mode span:not(.accent),
+.skeleton-mode .btn,
+.skeleton-mode .skill-item {
+  background: linear-gradient(90deg, var(--bg-surface) 25%, var(--bg-surface-light) 50%, var(--bg-surface) 75%) !important;
+  background-size: 200% 100% !important;
+  animation: skeletonPulse 1.5s infinite linear !important;
+  color: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  pointer-events: none !important;
+  border-radius: var(--radius-sm) !important;
 }
 
-/* Base outline for cards */
-.active-section .project-card,
-.active-section .cert-card,
-.active-section .stat-card,
-.active-section .skill-category,
-.active-section .timeline-content {
-  animation: skeletonBox 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+/* Ensure large cards keep their shape */
+.skeleton-mode .project-card,
+.skeleton-mode .cert-card,
+.skeleton-mode .stat-card {
+  border-radius: var(--radius-lg) !important;
 }
 
-@keyframes skeletonBox {
-  0% {
-    opacity: 0;
-    transform: translateY(20px);
-    background: var(--bg-surface-light);
-    border-color: transparent;
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* Hide images/icons to just show the pulsing block */
+.skeleton-mode img,
+.skeleton-mode i {
+  opacity: 0 !important;
 }
 
-/* Delay content inside the cards */
-.active-section .project-card > *,
-.active-section .cert-card > *,
-.active-section .stat-card > *,
-.active-section .skill-category > *,
-.active-section .timeline-content > * {
-  opacity: 0;
-  animation: skeletonContent 0.5s ease forwards;
-  animation-delay: 0.3s;
+@keyframes skeletonPulse {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Base fade-in for section content when skeleton mode is removed */
+.section.active-section:not(.skeleton-mode) {
+  animation: fadeInContent 0.5s ease forwards;
+}
+
+@keyframes fadeInContent {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
 }
 
 @keyframes skeletonContent {
