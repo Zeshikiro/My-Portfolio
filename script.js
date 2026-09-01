@@ -247,13 +247,12 @@ document.addEventListener('DOMContentLoaded', () => {
         type();
     }
 
-    // ========== FLOW FIELD CANVAS ==========
+    // ========== PARTICLE CANVAS ==========
     const canvas = document.getElementById('particle-canvas');
     if (canvas) {
         const ctx = canvas.getContext('2d');
         let particles = [];
         let animationFrameId;
-        let time = 0;
 
         const resizeCanvas = () => {
             canvas.width = window.innerWidth;
@@ -262,14 +261,14 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
-        let mouse = { x: null, y: null };
+        let mouse = { x: null, y: null, radius: 150 };
         
         window.addEventListener('mousemove', (e) => {
             mouse.x = e.x;
             mouse.y = e.y;
         });
 
-        // Reset mouse when it leaves the page
+        // Reset particles when mouse leaves the page
         const resetMouse = () => {
             mouse.x = null;
             mouse.y = null;
@@ -277,137 +276,91 @@ document.addEventListener('DOMContentLoaded', () => {
         document.documentElement.addEventListener('mouseleave', resetMouse);
         window.addEventListener('blur', resetMouse);
 
-        // Simplex-like noise using sine combinations (no library needed)
-        const noise = (x, y, z) => {
-            const n = Math.sin(x * 1.2 + z * 0.3) * 0.5 +
-                      Math.sin(y * 0.8 + z * 0.5) * 0.5 +
-                      Math.sin((x + y) * 0.7 + z * 0.2) * 0.3 +
-                      Math.sin(x * 2.1 - y * 1.4 + z * 0.1) * 0.2;
-            return n;
-        };
-
-        class FlowParticle {
+        class Particle {
             constructor() {
-                this.reset();
-                // Random starting life so they don't all reset at once
-                this.life = Math.random() * this.maxLife;
-            }
-
-            reset() {
                 this.x = Math.random() * canvas.width;
                 this.y = Math.random() * canvas.height;
-                this.maxLife = 300 + Math.random() * 400;
-                this.life = 0;
-                this.speed = 0.3 + Math.random() * 0.8;
-                this.size = Math.random() * 1.5 + 0.5;
-                
-                // Color variation: purple, teal, white mix
-                const colorChoice = Math.random();
-                if (colorChoice < 0.4) {
-                    this.r = 108; this.g = 99; this.b = 255;  // purple
-                } else if (colorChoice < 0.65) {
-                    this.r = 0; this.g = 212; this.b = 170;   // teal
-                } else if (colorChoice < 0.8) {
-                    this.r = 255; this.g = 107; this.b = 157;  // pink
-                } else {
-                    this.r = 200; this.g = 200; this.b = 220;  // soft white
-                }
-                
-                // Store previous positions for trail
-                this.history = [];
-                this.maxHistory = 8;
+                this.size = Math.random() * 2 + 0.5;
+                this.baseX = this.x;
+                this.baseY = this.y;
+                this.density = (Math.random() * 20) + 1;
+                this.speedX = (Math.random() * 0.4 + 0.1) * (Math.random() > 0.5 ? 1 : -1);
+                this.speedY = (Math.random() * 0.4 + 0.1) * (Math.random() > 0.5 ? 1 : -1);
+                this.opacity = Math.random() * 0.5 + 0.1;
             }
 
             update() {
-                this.life++;
-                if (this.life > this.maxLife || 
-                    this.x < -10 || this.x > canvas.width + 10 || 
-                    this.y < -10 || this.y > canvas.height + 10) {
-                    this.reset();
-                    return;
-                }
+                this.x += this.speedX;
+                this.y += this.speedY;
 
-                // Store trail
-                this.history.push({ x: this.x, y: this.y });
-                if (this.history.length > this.maxHistory) {
-                    this.history.shift();
-                }
-
-                // Get flow angle from noise
-                const scale = 0.003;
-                const angle = noise(this.x * scale, this.y * scale, time) * Math.PI * 2;
+                if (this.x > canvas.width) this.x = 0;
+                else if (this.x < 0) this.x = canvas.width;
                 
-                let vx = Math.cos(angle) * this.speed;
-                let vy = Math.sin(angle) * this.speed;
+                if (this.y > canvas.height) this.y = 0;
+                else if (this.y < 0) this.y = canvas.height;
 
-                // Mouse interaction: gentle gravity curve (not repulsion)
+                // Mouse interactivity
                 if (mouse.x != null) {
-                    const dx = mouse.x - this.x;
-                    const dy = mouse.y - this.y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < 200 && dist > 1) {
-                        const force = (200 - dist) / 200 * 0.4;
-                        // Orbit around the mouse instead of direct attraction
-                        vx += (-dy / dist) * force;
-                        vy += (dx / dist) * force;
+                    let dx = mouse.x - this.x;
+                    let dy = mouse.y - this.y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    let forceDirectionX = dx / distance;
+                    let forceDirectionY = dy / distance;
+                    let maxDistance = mouse.radius;
+                    let force = (maxDistance - distance) / maxDistance;
+                    let directionX = forceDirectionX * force * this.density;
+                    let directionY = forceDirectionY * force * this.density;
+
+                    if (distance < mouse.radius) {
+                        this.x -= directionX;
+                        this.y -= directionY;
                     }
                 }
-
-                this.x += vx;
-                this.y += vy;
             }
 
             draw() {
-                // Fade based on life
-                const fadeIn = Math.min(this.life / 50, 1);
-                const fadeOut = Math.max((this.maxLife - this.life) / 50, 0);
-                const alpha = Math.min(fadeIn, fadeOut) * 0.6;
-
-                // Draw trail
-                if (this.history.length > 1) {
-                    ctx.beginPath();
-                    ctx.moveTo(this.history[0].x, this.history[0].y);
-                    for (let i = 1; i < this.history.length; i++) {
-                        ctx.lineTo(this.history[i].x, this.history[i].y);
-                    }
-                    ctx.lineTo(this.x, this.y);
-                    ctx.strokeStyle = `rgba(${this.r}, ${this.g}, ${this.b}, ${alpha * 0.3})`;
-                    ctx.lineWidth = this.size * 0.6;
-                    ctx.stroke();
-                }
-
-                // Draw head
-                ctx.fillStyle = `rgba(${this.r}, ${this.g}, ${this.b}, ${alpha})`;
+                ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
                 ctx.fill();
             }
         }
 
-        const particleCount = window.innerWidth < 768 ? 80 : 150;
+        const particleCount = window.innerWidth < 768 ? 50 : 90;
         const initParticles = () => {
             particles = [];
             for (let i = 0; i < particleCount; i++) {
-                particles.push(new FlowParticle());
+                particles.push(new Particle());
             }
         };
 
-        const animateFlow = () => {
-            // Semi-transparent clear for trail persistence
-            ctx.fillStyle = 'rgba(10, 10, 15, 0.15)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        const animateParticles = () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
             
-            time += 0.003;
-
             for (let i = 0; i < particles.length; i++) {
                 particles[i].update();
                 particles[i].draw();
+
+                for (let j = i; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < 150) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(108, 99, 255, ${0.15 * (1 - distance / 150)})`;
+                        ctx.lineWidth = 1;
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
             }
-            animationFrameId = requestAnimationFrame(animateFlow);
+            animationFrameId = requestAnimationFrame(animateParticles);
         };
 
         initParticles();
-        animateFlow();
+        animateParticles();
     }
 
     // ========== CERT ACCORDION TOGGLE ==========
