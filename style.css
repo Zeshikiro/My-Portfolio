@@ -1794,9 +1794,8 @@ a {
 .skeleton-mode span:not(.accent),
 .skeleton-mode .btn,
 .skeleton-mode .skill-item {
-  background: linear-gradient(90deg, var(--bg-surface) 25%, var(--bg-surface-light) 50%, var(--bg-surface) 75%) !important;
-  background-size: 200% 100% !important;
-  animation: skeletonPulse 1.5s infinite linear !important;
+  background: var(--bg-surface-light) !important;
+  animation: skeletonPulse 1.2s ease-in-out infinite !important;
   color: transparent !important;
   border-color: transparent !important;
   box-shadow: none !important;
@@ -1818,8 +1817,9 @@ a {
 }
 
 @keyframes skeletonPulse {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
 }
 
 /* Base fade-in for section content when skeleton mode is removed */
