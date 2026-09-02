@@ -7,8 +7,6 @@ import { FaGithub, FaLinkedin, FaFacebook, FaInstagram } from "react-icons/fa";
 
 const TITLES = [
   "IT Student",
-  "Front-End Developer",
-  "UI/UX Enthusiast",
   "Tech Explorer"
 ];
 
