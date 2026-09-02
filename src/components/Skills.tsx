@@ -5,45 +5,38 @@ import { Wrench, Code2, Database, TerminalSquare, Bot, FileText } from "lucide-r
 
 const SKILL_CATEGORIES = [
   {
-    title: "Languages & Web",
-    icon: Code2,
-    skills: [
-      { name: "HTML", color: "#e44d26", level: "Foundational", width: 50 },
-      { name: "CSS", color: "#264de4", level: "Foundational", width: 50 },
-      { name: "Python", color: "#3776AB", level: "Learning", width: 30 },
-      { name: "Java", color: "#f89820", level: "Learning", width: 30 },
-    ],
-  },
-  {
-    title: "Database",
+    title: "Database Administration",
     icon: Database,
     skills: [
-      { name: "MySQL", color: "#00758f", level: "Basic", width: 45 },
+      { name: "MySQL", color: "#00758f", level: "Proficient", width: 75 },
+      { name: "Relational Design", color: "#f89820", level: "Proficient", width: 70 },
+      { name: "SQL Querying", color: "#e44d26", level: "Proficient", width: 75 },
     ],
   },
   {
-    title: "Tools & Systems",
+    title: "Linux & Systems",
     icon: TerminalSquare,
     skills: [
-      { name: "Linux Ubuntu", color: "#E95420", level: "Basic", width: 45 },
-      { name: "Git & GitHub", color: "#F05032", level: "Basic", width: 45 },
-      { name: "Computer Hardware", color: "#38bdf8", level: "Basic", width: 50 },
+      { name: "Ubuntu Linux", color: "#E95420", level: "Proficient", width: 80 },
+      { name: "Command Line (CLI)", color: "#38bdf8", level: "Proficient", width: 75 },
+      { name: "Computer Hardware", color: "#a78bfa", level: "Basic", width: 60 },
     ],
   },
   {
     title: "AI & Emerging Tech",
     icon: Bot,
     skills: [
-      { name: "AI-Assisted Dev", color: "#a78bfa", level: "Basic", width: 50 },
-      { name: "Prompt Engineering", color: "#10b981", level: "Basic", width: 45 },
+      { name: "Prompt Engineering", color: "#10b981", level: "Advanced", width: 85 },
+      { name: "AI-Assisted Dev", color: "#8b5cf6", level: "Proficient", width: 80 },
+      { name: "AI Workflows", color: "#3b82f6", level: "Proficient", width: 75 },
     ],
   },
   {
-    title: "Productivity",
-    icon: FileText,
+    title: "Tools & Productivity",
+    icon: Wrench,
     skills: [
-      { name: "Microsoft Word", color: "#2B579A", level: "Proficient", width: 70 },
-      { name: "Microsoft PPT", color: "#D24726", level: "Proficient", width: 70 },
+      { name: "Git & GitHub", color: "#F05032", level: "Basic", width: 60 },
+      { name: "Microsoft Office", color: "#2B579A", level: "Proficient", width: 80 },
     ],
   },
 ];
@@ -81,7 +74,7 @@ export default function Skills() {
               <span>Skills</span>
             </motion.div>
             <motion.h2 variants={itemVariants} className="font-heading font-bold text-4xl md:text-5xl">
-              My <span className="text-gradient-primary">Tech Stack</span>
+              Core <span className="text-gradient-primary">Competencies</span>
             </motion.h2>
           </div>
 

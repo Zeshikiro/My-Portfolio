@@ -43,10 +43,11 @@ export default function About() {
                 application designed to promote physical activity among university students.
               </p>
               <p>
-                My journey in tech started with HTML &amp; CSS, and I&apos;m continuously
-                expanding my skillset into Python, Java, databases, and Linux systems.
+                My journey in tech is deeply rooted in systems and data. I'm continuously
+                expanding my skillset in database administration, Linux environments, 
+                and leveraging AI-assisted development and prompt engineering to optimize workflows.
                 I believe in learning by doing — every project is an opportunity to grow
-                and every bug is a lesson in disguise.
+                and every challenge is a lesson in disguise.
               </p>
             </motion.div>
 

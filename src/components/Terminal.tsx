@@ -16,7 +16,7 @@ const COMMANDS: Record<string, string> = {
 IT Student & Developer
 Lead Developer of STEP-UP AR App.`,
   skills:
-    "Tech Stack: HTML, CSS, Python, Java, MySQL, Linux, Git, Prompt Engineering.",
+    "Core Competencies: MySQL, Ubuntu Linux, CLI, Prompt Engineering, AI-Assisted Dev, Git.",
   projects: `Featured:
  - STEP-UP (AR Step Tracker)
  - Project Website
