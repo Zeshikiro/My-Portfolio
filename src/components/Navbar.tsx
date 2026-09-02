@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Menu, X } from "lucide-react";
 
 const NAV_LINKS = [
@@ -17,6 +17,9 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const navRef = useRef<HTMLUListElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -30,7 +33,6 @@ export default function Navbar() {
         const element = document.getElementById(section);
         if (element) {
           const rect = element.getBoundingClientRect();
-          // If the top of the element is near the top of the viewport
           if (rect.top <= 150 && rect.bottom >= 150) {
             current = section;
           }
@@ -42,6 +44,14 @@ export default function Navbar() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setMousePos({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    });
+  };
 
   const scrollToSection = (id: string) => {
     setMobileMenuOpen(false);
@@ -71,28 +81,61 @@ export default function Navbar() {
         </button>
 
         {/* Desktop Menu */}
-        <ul className="hidden md:flex items-center gap-2 relative">
-          {NAV_LINKS.map((link) => {
+        <ul ref={navRef} className="hidden md:flex items-center gap-1 relative">
+          {NAV_LINKS.map((link, index) => {
             const sectionId = link.href.substring(1);
+            const isActive = activeSection === sectionId;
+            const isHovered = hoveredIndex === index;
+
             return (
               <li key={link.name}>
                 <button
                   onClick={() => scrollToSection(sectionId)}
-                  className={`relative px-4 py-2 rounded-md text-sm transition-colors ${
-                    activeSection === sectionId
+                  onMouseEnter={() => setHoveredIndex(index)}
+                  onMouseLeave={() => setHoveredIndex(null)}
+                  onMouseMove={handleMouseMove}
+                  className={`relative px-4 py-2 rounded-lg text-sm transition-colors overflow-hidden ${
+                    isActive
                       ? "text-[var(--color-accent-primary)] font-medium"
-                      : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-surface-hover)]"
+                      : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
                   }`}
                 >
-                  {activeSection === sectionId && (
+                  {/* Interactive glow that follows mouse */}
+                  {isHovered && (
+                    <motion.div
+                      className="absolute inset-0 pointer-events-none rounded-lg"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      style={{
+                        background: `radial-gradient(120px circle at ${mousePos.x}px ${mousePos.y}px, rgba(108, 99, 255, 0.15), transparent 70%)`,
+                      }}
+                    />
+                  )}
+
+                  {/* Hover background */}
+                  {isHovered && !isActive && (
+                    <motion.div
+                      layoutId="nav-hover"
+                      className="absolute inset-0 bg-[var(--color-bg-surface-hover)] rounded-lg"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                    />
+                  )}
+
+                  {/* Active indicator bar */}
+                  {isActive && (
                     <motion.div
                       layoutId="nav-indicator"
-                      className="absolute bottom-0 left-0 w-full h-[2px] bg-[var(--color-accent-primary)]"
+                      className="absolute bottom-0 left-1 right-1 h-[2px] bg-gradient-primary rounded-full"
                       initial={false}
                       transition={{ type: "spring", stiffness: 300, damping: 30 }}
                     />
                   )}
-                  {link.name}
+
+                  <span className="relative z-10">{link.name}</span>
                 </button>
               </li>
             );
