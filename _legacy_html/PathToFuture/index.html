@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Path to Future | The Data Architect's Blueprint</title>
+    <meta name="description" content="An interactive learning roadmap from BSIT Student to Data Architect. Master databases, model schemas, write SQL, and track your progress.">
+    <meta name="author" content="John Ryan Nicolas">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/roadmap.css">
+    <link rel="stylesheet" href="css/arena.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+
+    <!-- ========== NAVBAR ========== -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#hero" class="nav-logo">
+                P2F<span class="accent">.</span>
+            </a>
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="#roadmap" class="nav-link"><i class="ri-route-line"></i> Roadmap</a></li>
+                <li><a href="#knowledge" class="nav-link"><i class="ri-book-open-line"></i> Knowledge</a></li>
+                <li><a href="#arena" class="nav-link"><i class="ri-code-box-line"></i> Arena</a></li>
+                <li><a href="#dashboard" class="nav-link"><i class="ri-bar-chart-box-line"></i> Dashboard</a></li>
+                <li><a href="#resources" class="nav-link"><i class="ri-links-line"></i> Resources</a></li>
+            </ul>
+            <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ========== HERO ========== -->
+    <section class="hero" id="hero">
+        <canvas id="blueprint-canvas"></canvas>
+        <div class="hero-grid-overlay"></div>
+        <div class="hero-glow hero-glow--1"></div>
+        <div class="hero-glow hero-glow--2"></div>
+
+        <div class="hero-content">
+            <div class="hero-badge reveal">
+                <i class="ri-database-2-line"></i>
+                <span>BSIT Student → Data Architect</span>
+            </div>
+            <h1 class="hero-title reveal">
+                The Data Architect's<br>
+                <span class="hero-title-accent">Blueprint</span>
+            </h1>
+            <p class="hero-subtitle reveal">
+                Your interactive learning roadmap from student to Data Architect.
+                Master databases, model schemas, write SQL, and build your expertise — one node at a time.
+            </p>
+            <div class="hero-stats reveal">
+                <div class="hero-stat">
+                    <span class="hero-stat-number" data-target="4">0</span>
+                    <span class="hero-stat-label">Career Phases</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="hero-stat-number" data-target="24">0</span>
+                    <span class="hero-stat-label">Skills to Master</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="hero-stat-number" data-target="50">0</span>
+                    <span class="hero-stat-label">Challenges</span>
+                </div>
+            </div>
+            <div class="hero-cta reveal">
+                <a href="#roadmap" class="btn btn-primary">
+                    <i class="ri-route-line"></i> Start Your Journey
+                </a>
+                <a href="#arena" class="btn btn-outline">
+                    <i class="ri-code-box-line"></i> Practice Now
+                </a>
+            </div>
+        </div>
+
+        <div class="hero-scroll-indicator">
+            <span>Scroll to explore</span>
+            <div class="scroll-arrow">
+                <i class="ri-arrow-down-line"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== ROADMAP ========== -->
+    <section class="section roadmap" id="roadmap">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-tag"><i class="ri-route-line"></i> Career Roadmap</span>
+                <h2 class="section-title">Your Path to <span class="accent">Data Architect</span></h2>
+                <p class="section-subtitle">Click on skills you've mastered to track your progress. Prerequisites unlock as you advance.</p>
+            </div>
+
+            <div class="roadmap-progress reveal">
+                <div class="roadmap-progress-info">
+                    <span class="roadmap-progress-text" id="roadmap-progress-text">0 / 24 Skills</span>
+                    <span class="roadmap-progress-pct" id="roadmap-progress-pct">0%</span>
+                </div>
+                <div class="roadmap-progress-bar">
+                    <div class="roadmap-progress-fill" id="roadmap-progress-fill"></div>
+                </div>
+            </div>
+
+            <div class="roadmap-tree-wrapper reveal">
+                <div class="roadmap-tree" id="roadmap-tree">
+                    <!-- Tier columns and skill nodes rendered by roadmap.js -->
+                </div>
+            </div>
+
+            <div class="roadmap-legend reveal">
+                <div class="legend-item">
+                    <span class="legend-dot legend-dot--locked"></span> Locked
+                </div>
+                <div class="legend-item">
+                    <span class="legend-dot legend-dot--available"></span> Available
+                </div>
+                <div class="legend-item">
+                    <span class="legend-dot legend-dot--completed"></span> Completed
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== KNOWLEDGE VAULT ========== -->
+    <section class="section knowledge" id="knowledge">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-tag"><i class="ri-book-open-line"></i> Knowledge Vault</span>
+                <h2 class="section-title">Study Notes & <span class="accent">Cheat Sheets</span></h2>
+                <p class="section-subtitle">Your personal data architecture encyclopedia. Search, filter, and expand any topic.</p>
+            </div>
+
+            <div class="knowledge-controls reveal">
+                <div class="knowledge-search">
+                    <i class="ri-search-line"></i>
+                    <input type="text" id="knowledge-search" placeholder="Search topics, concepts, SQL keywords..." autocomplete="off">
+                </div>
+                <div class="knowledge-filters" id="knowledge-filters">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="database">
+                        <i class="ri-database-2-line"></i> Database
+                    </button>
+                    <button class="filter-btn" data-filter="sql">
+                        <i class="ri-terminal-box-line"></i> SQL
+                    </button>
+                    <button class="filter-btn" data-filter="modeling">
+                        <i class="ri-mind-map"></i> Modeling
+                    </button>
+                    <button class="filter-btn" data-filter="cloud">
+                        <i class="ri-cloud-line"></i> Cloud
+                    </button>
+                    <button class="filter-btn" data-filter="governance">
+                        <i class="ri-shield-check-line"></i> Governance
+                    </button>
+                </div>
+            </div>
+
+            <div class="knowledge-grid" id="knowledge-grid">
+                <!-- Knowledge cards rendered by knowledge.js -->
+            </div>
+
+            <div class="knowledge-empty" id="knowledge-empty" style="display:none">
+                <i class="ri-search-eye-line"></i>
+                <p>No topics match your search.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== PRACTICE ARENA ========== -->
+    <section class="section arena" id="arena">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-tag"><i class="ri-code-box-line"></i> Practice Arena</span>
+                <h2 class="section-title">Sharpen Your <span class="accent">Skills</span></h2>
+                <p class="section-subtitle">Hands-on challenges to test what you've learned. Write real SQL, solve normalization puzzles, ace quizzes.</p>
+            </div>
+
+            <div class="arena-tabs reveal">
+                <button class="arena-tab active" data-tab="quiz">
+                    <i class="ri-question-line"></i> Quiz
+                </button>
+                <button class="arena-tab" data-tab="normalization">
+                    <i class="ri-table-line"></i> Normalization
+                </button>
+                <button class="arena-tab" data-tab="sql">
+                    <i class="ri-terminal-box-line"></i> SQL Sandbox
+                </button>
+            </div>
+
+            <!-- ===== Quiz Panel ===== -->
+            <div class="arena-panel active" id="panel-quiz">
+                <div class="quiz-container">
+                    <div class="quiz-header">
+                        <div class="quiz-progress-info">
+                            <span>Question <strong id="quiz-current">1</strong> of <strong id="quiz-total">10</strong></span>
+                        </div>
+                        <div class="quiz-score-display">
+                            <i class="ri-trophy-line"></i>
+                            Score: <strong id="quiz-score">0</strong>
+                        </div>
+                        <div class="quiz-category-select">
+                            <select id="quiz-category">
+                                <option value="all">All Topics</option>
+                                <option value="database">Database Fundamentals</option>
+                                <option value="sql">SQL</option>
+                                <option value="modeling">Data Modeling</option>
+                                <option value="cloud">Cloud & Tools</option>
+                                <option value="governance">Governance</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="quiz-progress-bar">
+                        <div class="quiz-progress-fill" id="quiz-progress-fill"></div>
+                    </div>
+                    <div class="quiz-body">
+                        <div class="quiz-question" id="quiz-question">
+                            <p id="quiz-question-text">Loading question...</p>
+                        </div>
+                        <div class="quiz-options" id="quiz-options">
+                            <!-- 4 option buttons rendered by JS -->
+                        </div>
+                        <div class="quiz-feedback" id="quiz-feedback"></div>
+                    </div>
+                    <div class="quiz-actions">
+                        <button class="btn btn-primary" id="quiz-next" disabled>
+                            Next Question <i class="ri-arrow-right-line"></i>
+                        </button>
+                        <button class="btn btn-outline" id="quiz-restart" style="display:none">
+                            <i class="ri-restart-line"></i> Restart Quiz
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== Normalization Panel ===== -->
+            <div class="arena-panel" id="panel-normalization">
+                <div class="norm-container">
+                    <div class="norm-header">
+                        <h3 class="norm-title">Normalization Challenge</h3>
+                        <div class="norm-steps">
+                            <span class="norm-step active" data-step="unf">UNF</span>
+                            <i class="ri-arrow-right-s-line norm-step-arrow"></i>
+                            <span class="norm-step" data-step="1nf">1NF</span>
+                            <i class="ri-arrow-right-s-line norm-step-arrow"></i>
+                            <span class="norm-step" data-step="2nf">2NF</span>
+                            <i class="ri-arrow-right-s-line norm-step-arrow"></i>
+                            <span class="norm-step" data-step="3nf">3NF</span>
+                        </div>
+                    </div>
+                    <div class="norm-scenario" id="norm-scenario">
+                        <!-- Scenario description rendered by JS -->
+                    </div>
+                    <div class="norm-table-area" id="norm-table-area">
+                        <!-- Current table state rendered by JS -->
+                    </div>
+                    <div class="norm-actions-area">
+                        <div class="norm-question" id="norm-question">
+                            <!-- Current step question rendered by JS -->
+                        </div>
+                        <div class="norm-choices" id="norm-choices">
+                            <!-- Action choices rendered by JS -->
+                        </div>
+                        <div class="norm-feedback" id="norm-feedback"></div>
+                    </div>
+                    <div class="norm-nav">
+                        <button class="btn btn-outline btn-sm" id="norm-prev-puzzle" disabled>
+                            <i class="ri-arrow-left-line"></i> Previous Puzzle
+                        </button>
+                        <span id="norm-puzzle-counter" class="norm-puzzle-counter">Puzzle 1 / 3</span>
+                        <button class="btn btn-outline btn-sm" id="norm-next-puzzle">
+                            Next Puzzle <i class="ri-arrow-right-line"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== SQL Sandbox Panel ===== -->
+            <div class="arena-panel" id="panel-sql">
+                <div class="sql-container">
+                    <div class="sql-header">
+                        <div class="sql-challenge-info">
+                            <h3 id="sql-challenge-title">SQL Challenge</h3>
+                            <p id="sql-challenge-desc">Loading challenge...</p>
+                            <span class="sql-challenge-difficulty" id="sql-challenge-difficulty"></span>
+                        </div>
+                        <div class="sql-header-actions">
+                            <button class="btn btn-outline btn-sm" id="sql-schema-btn">
+                                <i class="ri-database-2-line"></i> Schema
+                            </button>
+                            <button class="btn btn-outline btn-sm" id="sql-hint-btn">
+                                <i class="ri-lightbulb-line"></i> Hint
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="sql-challenge-nav">
+                        <button class="btn btn-sm" id="sql-prev-challenge">
+                            <i class="ri-arrow-left-line"></i> Prev
+                        </button>
+                        <span id="sql-challenge-counter">1 / 10</span>
+                        <button class="btn btn-sm" id="sql-next-challenge">
+                            Next <i class="ri-arrow-right-line"></i>
+                        </button>
+                    </div>
+
+                    <div class="sql-schema-panel" id="sql-schema-panel" style="display:none">
+                        <div class="sql-schema-header">
+                            <span><i class="ri-database-2-line"></i> Database Schema</span>
+                            <button class="sql-schema-close" id="sql-schema-close">&times;</button>
+                        </div>
+                        <pre id="sql-schema-content" class="sql-schema-code"></pre>
+                    </div>
+
+                    <div class="sql-hint-panel" id="sql-hint-panel" style="display:none">
+                        <div class="sql-hint-header">
+                            <span><i class="ri-lightbulb-line"></i> Hint</span>
+                            <button class="sql-hint-close" id="sql-hint-close">&times;</button>
+                        </div>
+                        <p id="sql-hint-content"></p>
+                    </div>
+
+                    <div class="sql-workspace">
+                        <div class="sql-editor-area">
+                            <div class="sql-editor-header">
+                                <span><i class="ri-terminal-box-line"></i> SQL Editor</span>
+                                <div class="sql-editor-actions">
+                                    <button class="btn btn-sm btn-ghost" id="sql-clear" title="Clear editor">
+                                        <i class="ri-delete-back-2-line"></i> Clear
+                                    </button>
+                                    <button class="btn btn-sm btn-primary" id="sql-run" title="Run query (Ctrl+Enter)">
+                                        <i class="ri-play-line"></i> Run
+                                    </button>
+                                </div>
+                            </div>
+                            <textarea id="sql-editor" class="sql-editor" placeholder="-- Write your SQL query here...&#10;-- Press Ctrl+Enter to run" spellcheck="false"></textarea>
+                        </div>
+                        <div class="sql-results-area">
+                            <div class="sql-results-header">
+                                <span><i class="ri-table-line"></i> Results</span>
+                                <span class="sql-results-info" id="sql-results-info"></span>
+                            </div>
+                            <div class="sql-results" id="sql-results">
+                                <p class="sql-results-placeholder">
+                                    <i class="ri-play-circle-line"></i>
+                                    Run a query to see results here.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sql-feedback" id="sql-feedback"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== DASHBOARD ========== -->
+    <section class="section dashboard" id="dashboard">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-tag"><i class="ri-bar-chart-box-line"></i> Progress Dashboard</span>
+                <h2 class="section-title">Track Your <span class="accent">Growth</span></h2>
+                <p class="section-subtitle">Visualize your learning journey and earn badges as you master data architecture.</p>
+            </div>
+
+            <div class="dashboard-stats reveal" id="dashboard-stats">
+                <div class="stat-card">
+                    <div class="stat-icon stat-icon--topics">
+                        <i class="ri-checkbox-circle-line"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="stat-topics">0</div>
+                        <div class="stat-label">Skills Completed</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon stat-icon--quizzes">
+                        <i class="ri-question-answer-line"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="stat-quiz-score">0%</div>
+                        <div class="stat-label">Quiz Accuracy</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon stat-icon--streak">
+                        <i class="ri-fire-line"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="stat-streak">0</div>
+                        <div class="stat-label">Day Streak</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon stat-icon--badges">
+                        <i class="ri-medal-line"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="stat-badges">0</div>
+                        <div class="stat-label">Badges Earned</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-main reveal">
+                <div class="dashboard-chart-card">
+                    <h3><i class="ri-radar-line"></i> Skill Radar</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="skill-radar-chart"></canvas>
+                    </div>
+                </div>
+                <div class="dashboard-badges-card">
+                    <h3><i class="ri-medal-line"></i> Achievements</h3>
+                    <div class="badges-grid" id="badges-grid">
+                        <!-- Badges rendered by dashboard.js -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-actions reveal">
+                <button class="btn btn-outline btn-danger" id="reset-progress">
+                    <i class="ri-delete-bin-line"></i> Reset All Progress
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== RESOURCES ========== -->
+    <section class="section resources" id="resources">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-tag"><i class="ri-links-line"></i> Resources</span>
+                <h2 class="section-title">Level Up <span class="accent">Further</span></h2>
+                <p class="section-subtitle">Curated courses, certifications, tools, and communities for aspiring Data Architects.</p>
+            </div>
+
+            <div class="resources-grid reveal">
+                <!-- Certifications -->
+                <div class="resource-card">
+                    <div class="resource-card-header">
+                        <div class="resource-icon"><i class="ri-award-line"></i></div>
+                        <h3>Certifications</h3>
+                    </div>
+                    <ul class="resource-list">
+                        <li>
+                            <a href="https://cloud.google.com/certification/data-engineer" target="_blank" rel="noopener">
+                                <i class="ri-external-link-line"></i> Google Professional Data Engineer
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://aws.amazon.com/certification/certified-data-analytics-specialty/" target="_blank" rel="noopener">
+                                <i class="ri-external-link-line"></i> AWS Data Analytics Specialty
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://learn.microsoft.com/en-us/credentials/certifications/azure-data-engineer/" target="_blank" rel="noopener">
+                                <i class="ri-external-link-line"></i> Azure Data Engineer Associate
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://cdmp.info/" target="_blank" rel="noopener">
+                                <i class="ri-external-link-line"></i> CDMP (Data Management Professional)
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.comptia.org/certifications/data" target="_blank" rel="noopener">
+                                <i class="ri-external-link-line"></i> CompTIA Data+
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Free Learning -->
+                <div class="resource-card">
+                    <div class="resource-card-header">
+                        <div class="resource-icon"><i class="ri-graduation-cap-line"></i></div>
+                        <h3>Free Learning</h3>
+                    </div>
+                    <ul class="resource-list">
+                        <li>
+                            <a href="https://www.w3schools.com/sql/" target="_blank" rel="noopener">
+                                <i class="ri-external-link-line"></i> W3Schools SQL Tutorial
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://mode.com/sql-tutorial" target="_blank" rel="noopener">
+                                <i class="ri-external-link-line"></i> Mode Analytics SQL Tutorial
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.kaggle.com/learn" target="_blank" rel="noopener">
+                                <i class="ri-external-link-line"></i> Kaggle Learn (Free Courses)
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://university.mongodb.com/" target="_blank" rel="noopener">
+                                <i class="ri-external-link-line"></i> MongoDB University
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.coursera.org/specializations/gcp-data-machine-learning" target="_blank" rel="noopener">
+                                <i class="ri-external-link-line"></i> GCP Data Engineering (Coursera)
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Essential Tools -->
+                <div class="resource-card">
+                    <div class="resource-card-header">
+                        <div class="resource-icon"><i class="ri-tools-line"></i></div>
+                        <h3>Essential Tools</h3>
+                    </div>
+                    <ul class="resource-list">
+                        <li>
+                            <a href="https://dbeaver.io/" target="_blank" rel="noopener">
+                                <i class="ri-external-link-line"></i> DBeaver (Universal DB Client)
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.getdbt.com/" target="_blank" rel="noopener">
+                                <i class="ri-external-link-line"></i> dbt (Data Build Tool)
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://airflow.apache.org/" target="_blank" rel="noopener">
+                                <i class="ri-external-link-line"></i> Apache Airflow
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://drawsql.app/" target="_blank" rel="noopener">
+                                <i class="ri-external-link-line"></i> DrawSQL (Schema Design)
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.eraser.io/" target="_blank" rel="noopener">
+                                <i class="ri-external-link-line"></i> Eraser (Architecture Diagrams)
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Communities -->
+                <div class="resource-card">
+                    <div class="resource-card-header">
+                        <div class="resource-icon"><i class="ri-team-line"></i></div>
+                        <h3>Communities</h3>
+                    </div>
+                    <ul class="resource-list">
+                        <li>
+                            <a href="https://www.reddit.com/r/dataengineering/" target="_blank" rel="noopener">
+                                <i class="ri-external-link-line"></i> r/dataengineering
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.reddit.com/r/SQL/" target="_blank" rel="noopener">
+                                <i class="ri-external-link-line"></i> r/SQL
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.reddit.com/r/DatabaseHelp/" target="_blank" rel="noopener">
+                                <i class="ri-external-link-line"></i> r/DatabaseHelp
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://stackoverflow.com/questions/tagged/database-design" target="_blank" rel="noopener">
+                                <i class="ri-external-link-line"></i> StackOverflow — DB Design
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://discord.gg/dataengineering" target="_blank" rel="noopener">
+                                <i class="ri-external-link-line"></i> Data Engineering Discord
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <a href="#hero" class="footer-logo">P2F<span class="accent">.</span></a>
+                    <p>Path to Future — From Student to Data Architect</p>
+                </div>
+                <div class="footer-nav">
+                    <a href="#roadmap">Roadmap</a>
+                    <a href="#knowledge">Knowledge</a>
+                    <a href="#arena">Arena</a>
+                    <a href="#dashboard">Dashboard</a>
+                    <a href="#resources">Resources</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 John Ryan Nicolas. Built with ☕ and determination.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ========== SCRIPTS ========== -->
+    <!-- External Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
+
+    <!-- Data Files -->
+    <script src="js/data/roadmap-data.js"></script>
+    <script src="js/data/knowledge-data.js"></script>
+    <script src="js/data/quiz-data.js"></script>
+    <script src="js/data/sql-challenges.js"></script>
+
+    <!-- App Logic -->
+    <script src="js/app.js"></script>
+    <script src="js/roadmap.js"></script>
+    <script src="js/knowledge.js"></script>
+    <script src="js/arena.js"></script>
+    <script src="js/sql-sandbox.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>
