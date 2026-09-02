@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
-import { Award, ChevronDown, Code, HeartHandshake, Shield, Building2, Calendar, ZoomIn } from "lucide-react";
+import { Award, ChevronDown, Code, HeartHandshake, Shield, Building2, Calendar, ZoomIn, X } from "lucide-react";
 
 type Cert = {
   id: string;
@@ -96,7 +96,6 @@ const CERT_CATEGORIES: CertCategory[] = [
         desc: "Completed the basic ROTC cadet training.",
         image: "/Photos/basic_cadet.png",
       },
-      // Skipping other ROTC certs for brevity, I will add them if needed but we have basic_cadet
       {
         id: "rotc",
         title: "Advanced ROTC",
@@ -119,6 +118,7 @@ const CERT_CATEGORIES: CertCategory[] = [
 
 export default function Certifications() {
   const [openCategory, setOpenCategory] = useState<string>("technical");
+  const [selectedCert, setSelectedCert] = useState<Cert | null>(null);
 
   const containerVariants: import("framer-motion").Variants = {
     hidden: { opacity: 0 },
@@ -127,7 +127,7 @@ export default function Certifications() {
 
   const itemVariants: import("framer-motion").Variants = {
     hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" as const } },
   };
 
   return (
@@ -192,7 +192,11 @@ export default function Certifications() {
                       >
                         <div className="p-6 md:p-8 grid md:grid-cols-2 gap-6">
                           {category.certs.map((cert) => (
-                            <div key={cert.id} className="bg-[var(--color-bg-primary)] rounded-xl overflow-hidden border border-[var(--color-glass-border)] hover:border-[var(--color-accent-primary)] transition-all duration-300 hover:-translate-y-1 hover:shadow-glow group cursor-pointer">
+                            <div 
+                              key={cert.id} 
+                              onClick={() => setSelectedCert(cert)}
+                              className="bg-[var(--color-bg-primary)] rounded-xl overflow-hidden border border-[var(--color-glass-border)] hover:border-[var(--color-accent-primary)] transition-all duration-300 hover:-translate-y-1 hover:shadow-glow group cursor-pointer"
+                            >
                               <div className="h-48 overflow-hidden bg-[var(--color-bg-surface-hover)] relative">
                                 <img
                                   src={cert.image}
@@ -231,6 +235,58 @@ export default function Certifications() {
           </div>
         </motion.div>
       </div>
+
+      <AnimatePresence>
+        {selectedCert && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSelectedCert(null)}
+            className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 md:p-8"
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative max-w-4xl w-full bg-[var(--color-bg-surface)] rounded-2xl overflow-hidden border border-[var(--color-glass-border)] shadow-2xl flex flex-col max-h-[90vh]"
+            >
+              <button
+                onClick={() => setSelectedCert(null)}
+                className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-[var(--color-accent-primary)] transition-colors backdrop-blur-md"
+              >
+                <X size={20} />
+              </button>
+              
+              <div className="relative flex-1 bg-black overflow-hidden flex items-center justify-center p-4 min-h-[40vh]">
+                <img
+                  src={selectedCert.image}
+                  alt={selectedCert.title}
+                  className="max-w-full max-h-[60vh] object-contain"
+                />
+              </div>
+              
+              <div className="p-6 md:p-8 bg-[var(--color-bg-surface)]">
+                <h3 className="font-heading font-bold text-2xl md:text-3xl mb-3">{selectedCert.title}</h3>
+                <div className="flex flex-wrap items-center gap-4 text-[var(--color-text-secondary)] mb-4">
+                  <div className="flex items-center gap-1.5">
+                    <Building2 size={16} className="text-[var(--color-accent-primary)]" />
+                    <span>{selectedCert.org}</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <Calendar size={16} className="text-[var(--color-accent-primary)]" />
+                    <span>{selectedCert.date}</span>
+                  </div>
+                </div>
+                <p className="text-[var(--color-text-secondary)] leading-relaxed">
+                  {selectedCert.desc}
+                </p>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }
