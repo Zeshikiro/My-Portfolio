@@ -27,6 +27,14 @@ const CERT_CATEGORIES: CertCategory[] = [
     icon: Code,
     certs: [
       {
+        id: "sololearn-data-analytics-ai",
+        title: "Data Analytics with AI",
+        org: "Sololearn",
+        date: "September 21, 2026",
+        desc: "Successfully completed the course by demonstrating theoretical and practical understanding of Data Analytics with AI.",
+        image: "/Photos/data analytics with ai.jpg",
+      },
+      {
         id: "sololearn-sql",
         title: "Introduction to SQL",
         org: "Sololearn",
