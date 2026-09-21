@@ -97,7 +97,7 @@ export default function Hero() {
             <Mail size={18} />
             <span>Contact Me</span>
           </a>
-          <a href="/resume.pdf" download className="btn w-full sm:w-auto px-8 py-3.5 rounded-xl flex items-center justify-center gap-2 border-2 border-[var(--color-accent-secondary)] text-[var(--color-accent-secondary)] hover:bg-[var(--color-accent-secondary)] hover:text-white transition-all duration-300 font-medium">
+          <a href="/Jrn_Resume-9-21-2026.pdf" download className="btn w-full sm:w-auto px-8 py-3.5 rounded-xl flex items-center justify-center gap-2 border-2 border-[var(--color-accent-secondary)] text-[var(--color-accent-secondary)] hover:bg-[var(--color-accent-secondary)] hover:text-white transition-all duration-300 font-medium">
             <Download size={18} />
             <span>Resume</span>
           </a>
