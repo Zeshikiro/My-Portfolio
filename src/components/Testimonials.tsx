@@ -27,10 +27,10 @@ const TESTIMONIALS: Testimonial[] = [
   },
   {
     quote:
-      "John Ryan consistently shows a strong work ethic and genuine curiosity about technology. His dedication to learning new skills in AI, databases, and Linux systems sets him apart from his peers.",
-    name: "Academic Mentor",
-    role: "Faculty, PSAU",
-    relationship: "Professor",
+      "Among all the groups from different colleges, John Ryan stood out the most. His confidence, clear voice, and attitude during the IT Marketing presentation were outstanding. His communication and delivery were on another level — truly impressive for a student.",
+    name: "IRCITE Panel Faculty",
+    role: "IT Marketing Evaluation, PSITE",
+    relationship: "IRCITE Evaluator",
   },
 ];
 
