@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { Mail, User, MessageSquare, Send, MapPin } from "lucide-react";
-import { FaGithub, FaLinkedin } from "react-icons/fa";
+import { FaGithub, FaLinkedin, FaFacebook, FaInstagram, FaTiktok } from "react-icons/fa";
 
 export default function Contact() {
   const [status, setStatus] = useState<"idle" | "loading" | "success">("idle");
@@ -131,12 +131,21 @@ export default function Contact() {
               
               <div className="pt-8 border-t border-[var(--color-glass-border)]">
                 <h4 className="text-sm font-medium text-[var(--color-text-muted)] uppercase tracking-wider mb-6">Connect with me</h4>
-                <div className="flex gap-4">
+                <div className="flex gap-4 flex-wrap">
                   <a href="https://github.com/Zeshikiro" target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-full bg-[var(--color-glass-bg)] border border-[var(--color-glass-border)] flex items-center justify-center text-[var(--color-text-primary)] hover:bg-[var(--color-accent-primary)] hover:text-white hover:-translate-y-1 hover:border-transparent transition-all shadow-lg">
                     <FaGithub size={20} />
                   </a>
                   <a href="https://www.linkedin.com/in/john-ryan-nicolas-21b058332/" target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-full bg-[var(--color-glass-bg)] border border-[var(--color-glass-border)] flex items-center justify-center text-[var(--color-text-primary)] hover:bg-[var(--color-accent-primary)] hover:text-white hover:-translate-y-1 hover:border-transparent transition-all shadow-lg">
                     <FaLinkedin size={20} />
+                  </a>
+                  <a href="https://www.facebook.com/johnryan.nicolas.3/" target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-full bg-[var(--color-glass-bg)] border border-[var(--color-glass-border)] flex items-center justify-center text-[var(--color-text-primary)] hover:bg-[var(--color-accent-primary)] hover:text-white hover:-translate-y-1 hover:border-transparent transition-all shadow-lg">
+                    <FaFacebook size={20} />
+                  </a>
+                  <a href="https://www.instagram.com/zeshikiro/" target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-full bg-[var(--color-glass-bg)] border border-[var(--color-glass-border)] flex items-center justify-center text-[var(--color-text-primary)] hover:bg-[var(--color-accent-primary)] hover:text-white hover:-translate-y-1 hover:border-transparent transition-all shadow-lg">
+                    <FaInstagram size={20} />
+                  </a>
+                  <a href="https://www.tiktok.com/@zeshikiro" target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-full bg-[var(--color-glass-bg)] border border-[var(--color-glass-border)] flex items-center justify-center text-[var(--color-text-primary)] hover:bg-[var(--color-accent-primary)] hover:text-white hover:-translate-y-1 hover:border-transparent transition-all shadow-lg">
+                    <FaTiktok size={20} />
                   </a>
                 </div>
               </div>

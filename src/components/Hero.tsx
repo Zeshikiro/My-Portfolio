@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { Code2, Folder, Mail, Download } from "lucide-react";
-import { FaGithub, FaLinkedin, FaFacebook, FaInstagram } from "react-icons/fa";
+import { FaGithub, FaLinkedin, FaFacebook, FaInstagram, FaTiktok } from "react-icons/fa";
 
 const TITLES = [
   "IT Student",
@@ -109,6 +109,7 @@ export default function Hero() {
             { icon: FaLinkedin, href: "https://www.linkedin.com/in/john-ryan-nicolas-21b058332/", label: "LinkedIn" },
             { icon: FaFacebook, href: "https://www.facebook.com/johnryan.nicolas.3/", label: "Facebook" },
             { icon: FaInstagram, href: "https://www.instagram.com/zeshikiro/", label: "Instagram" },
+            { icon: FaTiktok, href: "https://www.tiktok.com/@zeshikiro", label: "TikTok" },
           ].map((social) => (
             <a
               key={social.label}

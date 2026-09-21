@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { Folder, Star, UserPlus, Globe, ExternalLink } from "lucide-react";
 import { FaGithub } from "react-icons/fa";
 
@@ -79,27 +80,16 @@ export default function Projects() {
               </div>
 
               <div className="flex-1 w-full flex justify-center items-center">
-                <div className="w-[240px] h-[480px] bg-[var(--color-bg-surface)] border-4 border-[var(--color-border)] rounded-[40px] relative overflow-hidden shadow-2xl flex flex-col">
-                  {/* Notch */}
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-6 bg-[var(--color-bg-primary)] rounded-b-xl z-20" />
-                  
-                  {/* Screen Content */}
-                  <div className="flex-1 bg-gradient-to-b from-[var(--color-bg-surface)] to-[var(--color-bg-surface-light)] flex flex-col items-center justify-center p-6 gap-4">
-                    <div className="w-16 h-16 rounded-full bg-gradient-primary flex items-center justify-center text-white shadow-glow mb-2">
-                      <Star size={32} />
-                    </div>
-                    <span className="font-heading font-bold text-xl">STEP-UP</span>
-                    
-                    <div className="text-center mt-6">
-                      <div className="font-heading font-bold text-4xl text-gradient-primary mb-1">8,432</div>
-                      <div className="text-[var(--color-text-muted)] text-sm uppercase tracking-widest">steps today</div>
-                    </div>
-                    
-                    <div className="mt-8 bg-[var(--color-accent-secondary)]/15 text-[var(--color-accent-secondary)] text-xs font-medium px-3 py-1.5 rounded-full flex items-center gap-1.5">
-                      <Globe size={14} />
-                      AR Active
-                    </div>
-                  </div>
+                <div className="w-[240px] h-[480px] bg-[var(--color-bg-surface)] border-4 border-[var(--color-border)] rounded-[40px] relative overflow-hidden shadow-2xl flex flex-col group">
+                  {/* Image */}
+                  <Image
+                    src="/Photos/step-up.png"
+                    alt="STEP-UP App Start Screen"
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-700"
+                  />
+                  {/* Overlay for realism */}
+                  <div className="absolute inset-0 bg-gradient-to-tr from-black/20 to-transparent pointer-events-none" />
                 </div>
               </div>
             </div>
