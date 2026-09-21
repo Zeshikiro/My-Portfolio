@@ -125,7 +125,7 @@ const CERT_CATEGORIES: CertCategory[] = [
 ];
 
 export default function Certifications() {
-  const [openCategory, setOpenCategory] = useState<string>("technical");
+  const [openCategory, setOpenCategory] = useState<string>("");
   const [selectedCert, setSelectedCert] = useState<Cert | null>(null);
 
   const containerVariants: import("framer-motion").Variants = {
