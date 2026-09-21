@@ -13,24 +13,24 @@ type Testimonial = {
 const TESTIMONIALS: Testimonial[] = [
   {
     quote:
-      "John Ryan demonstrated exceptional leadership as the Lead Developer of the STEP-UP project. His ability to coordinate the team and deliver a functional AR application under tight deadlines was truly impressive.",
-    name: "STEP-UP Capstone Adviser",
-    role: "Faculty, PSAU BSIT Department",
-    relationship: "Capstone Adviser",
+      "John Ryan is one of the most honest and dedicated brothers I've encountered in our ministry. His maturity in thinking goes beyond his age, and his commitment to serving faithfully is something that truly inspires everyone around him.",
+    name: "Church Brother",
+    role: "Lifeguide Leader / Cell Group Leader",
+    relationship: "Church Ministry",
   },
   {
     quote:
-      "Working alongside John Ryan on the STEP-UP project was a great experience. He's always willing to help, explains technical concepts clearly, and keeps the team motivated even during crunch time.",
-    name: "STEP-UP Teammate",
-    role: "BSIT Student, PSAU",
-    relationship: "Capstone Teammate",
+      "John Ryan was an outstanding leader in ROTC — a quick and critical thinker who always stayed composed under pressure. He was nominated to become the Battalion Commander of the cadets if we had made it to 1st Class Officer. That says everything about his leadership.",
+    name: "ROTC Colleague",
+    role: "Fellow Cadet, Advanced ROTC",
+    relationship: "ROTC Mate",
   },
   {
     quote:
       "Among all the groups from different colleges, John Ryan stood out the most. His confidence, clear voice, and attitude during the IT Marketing presentation were outstanding. His communication and delivery were on another level — truly impressive for a student.",
-    name: "IRCITE Panel Faculty",
-    role: "IT Marketing Evaluation, PSITE",
-    relationship: "IRCITE Evaluator",
+    name: "Faculty Guide",
+    role: "BSIT Department, PSAU",
+    relationship: "IRCITE Faculty Guide",
   },
 ];
 
