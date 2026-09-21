@@ -6,12 +6,19 @@ import Skills from "@/components/Skills";
 import Projects from "@/components/Projects";
 import Education from "@/components/Education";
 import Certifications from "@/components/Certifications";
+import Testimonials from "@/components/Testimonials";
 import Contact from "@/components/Contact";
 import Terminal from "@/components/Terminal";
+import Footer from "@/components/Footer";
+import BackToTop from "@/components/BackToTop";
+import LoadingScreen from "@/components/LoadingScreen";
+import ScrollProgress from "@/components/ScrollProgress";
 
 export default function Home() {
   return (
     <main className="relative min-h-screen">
+      <LoadingScreen />
+      <ScrollProgress />
       <ParticleBackground />
       <Navbar />
       <Hero />
@@ -20,12 +27,11 @@ export default function Home() {
       <Projects />
       <Education />
       <Certifications />
+      <Testimonials />
       <Contact />
       <Terminal />
-      
-      <footer className="py-8 text-center text-[var(--color-text-muted)] text-sm border-t border-[var(--color-glass-border)] bg-[var(--color-bg-primary)]">
-        <p>&copy; {new Date().getFullYear()} John Ryan Nicolas. Built with Next.js, Tailwind & Framer Motion.</p>
-      </footer>
+      <BackToTop />
+      <Footer />
     </main>
   );
 }

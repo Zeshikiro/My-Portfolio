@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { User, Rocket, Users, Code, FolderOpen } from "lucide-react";
+import AnimatedCounter from "./AnimatedCounter";
 
 export default function About() {
   const containerVariants: import("framer-motion").Variants = {
@@ -53,10 +54,10 @@ export default function About() {
 
             <div className="grid grid-cols-2 gap-4">
               {[
-                { icon: Rocket, number: 1, label: "Capstone Project" },
-                { icon: Users, number: 1, label: "Lead Developer Role" },
-                { icon: Code, number: 12, label: "Technologies" },
-                { icon: FolderOpen, number: 3, label: "Projects" },
+                { icon: Rocket, number: 1, suffix: "", label: "Capstone Project" },
+                { icon: Users, number: 1, suffix: "", label: "Lead Developer Role" },
+                { icon: Code, number: 12, suffix: "+", label: "Technologies" },
+                { icon: FolderOpen, number: 3, suffix: "+", label: "Projects" },
               ].map((stat, i) => (
                 <motion.div
                   key={stat.label}
@@ -67,7 +68,7 @@ export default function About() {
                     <stat.icon size={24} />
                   </div>
                   <div className="font-heading font-bold text-4xl text-gradient-primary mb-1">
-                    {stat.number}
+                    <AnimatedCounter target={stat.number} suffix={stat.suffix} />
                   </div>
                   <div className="text-sm text-[var(--color-text-secondary)]">
                     {stat.label}

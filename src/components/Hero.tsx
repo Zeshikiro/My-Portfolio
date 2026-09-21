@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { Code2, Folder, Mail } from "lucide-react";
+import { Code2, Folder, Mail, Download } from "lucide-react";
 import { FaGithub, FaLinkedin, FaFacebook, FaInstagram } from "react-icons/fa";
 
 const TITLES = [
@@ -96,6 +96,10 @@ export default function Hero() {
           <a href="#contact" className="btn btn-outline w-full sm:w-auto px-8 py-3.5 rounded-xl flex items-center justify-center gap-2 border-2 border-[var(--color-accent-primary)] text-[var(--color-accent-primary)] hover:bg-[var(--color-accent-primary)] hover:text-white transition-all duration-300 font-medium">
             <Mail size={18} />
             <span>Contact Me</span>
+          </a>
+          <a href="/resume.pdf" download className="btn w-full sm:w-auto px-8 py-3.5 rounded-xl flex items-center justify-center gap-2 border-2 border-[var(--color-accent-secondary)] text-[var(--color-accent-secondary)] hover:bg-[var(--color-accent-secondary)] hover:text-white transition-all duration-300 font-medium">
+            <Download size={18} />
+            <span>Resume</span>
           </a>
         </motion.div>
 
