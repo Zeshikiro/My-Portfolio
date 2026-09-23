@@ -13,7 +13,7 @@ type Testimonial = {
 const TESTIMONIALS: Testimonial[] = [
   {
     quote:
-      "John Ryan is one of the most honest and dedicated brothers I've encountered in our ministry. His maturity in thinking goes beyond his age, and his commitment to serving faithfully is something that truly inspires everyone around him.",
+      "John Ryan is one of the most honest and dedicated brother I've encountered in our ministry. His maturity in thinking goes beyond his age, and his commitment to serving faithfully is something that truly inspires everyone around him.",
     name: "Church Brother",
     role: "Lifeguide Leader / Cell Group Leader",
     relationship: "Church Ministry",
