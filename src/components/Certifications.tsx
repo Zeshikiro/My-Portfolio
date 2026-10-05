@@ -27,6 +27,14 @@ const CERT_CATEGORIES: CertCategory[] = [
     icon: Code,
     certs: [
       {
+        id: "sololearn-sql-intermediate",
+        title: "SQL Intermediate",
+        org: "Sololearn",
+        date: "October 5, 2026",
+        desc: "Successfully completed the course by demonstrating theoretical and practical understanding of SQL Intermediate.",
+        image: "/Photos/sql_intermediate.jpg",
+      },
+      {
         id: "sololearn-data-analytics-ai",
         title: "Data Analytics with AI",
         org: "Sololearn",

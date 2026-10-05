@@ -18,6 +18,7 @@ const NAV_LINKS = [
   { name: "Projects", href: "#projects" },
   { name: "Education", href: "#education" },
   { name: "Certifications", href: "#certifications" },
+  { name: "Gallery", href: "#gallery" },
   { name: "Contact", href: "#contact" },
 ];
 
