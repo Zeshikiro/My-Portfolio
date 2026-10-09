@@ -40,6 +40,7 @@ TikTok: tiktok.com/@zeshikiro`,
 type Line = { id: number; html: string };
 
 export default function Terminal() {
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [lines, setLines] = useState<Line[]>([
     { id: 0, html: "Welcome to JRN OS v1.0.0" },
@@ -88,6 +89,37 @@ export default function Terminal() {
     if (cmd === "clear") {
       setLines([]);
       return;
+    }
+
+    if (cmd.startsWith("cd ")) {
+      const target = cmd.slice(3).trim();
+      if (target === ".." || target === "~" || target === "/") {
+        router.push("/");
+        setIsOpen(false);
+        return;
+      }
+      const tab = findTabByName(target);
+      if (tab) {
+        router.push(tab.href);
+        setIsOpen(false);
+        return;
+      } else {
+        addLine(`cd: no such file or directory: ${target}`);
+        return;
+      }
+    }
+
+    if (cmd.startsWith("select * from ")) {
+      const target = cmd.slice(14).replace(/;/g, "").trim();
+      const tab = findTabByName(target);
+      if (tab) {
+        router.push(tab.href);
+        setIsOpen(false);
+        return;
+      } else {
+        addLine(`ERROR 1146 (42S02): Table 'portfolio.${target}' doesn't exist`);
+        return;
+      }
     }
 
     const response = COMMANDS[cmd];

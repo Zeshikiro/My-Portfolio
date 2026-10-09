@@ -53,3 +53,75 @@
     box-shadow: 0 0 40px rgba(108, 99, 255, 0.15);
   }
 }
+
+/* ---------- Lounge (/play) ---------- */
+
+.lounge-avatar .av-flip {
+  transition: transform 0.12s ease;
+  transform-box: view-box;
+  transform-origin: 50% 50%;
+}
+.lounge-avatar[data-dir="left"] .av-flip {
+  transform: scaleX(-1);
+}
+.lounge-avatar .av-leg,
+.lounge-avatar .av-arm {
+  transform-box: fill-box;
+  transform-origin: 50% 10%;
+}
+.lounge-avatar .av-bob {
+  animation: av-breathe 2.6s ease-in-out infinite;
+}
+.lounge-avatar[data-moving="true"] .av-bob {
+  animation: av-step 0.34s ease-in-out infinite;
+}
+.lounge-avatar[data-moving="true"] .av-leg-front,
+.lounge-avatar[data-moving="true"] .av-arm-back {
+  animation: av-swing 0.34s ease-in-out infinite alternate;
+}
+.lounge-avatar[data-moving="true"] .av-leg-back,
+.lounge-avatar[data-moving="true"] .av-arm-front {
+  animation: av-swing 0.34s ease-in-out infinite alternate-reverse;
+}
+.lounge-avatar[data-moving="true"] .av-shadow {
+  animation: av-shadow 0.34s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@keyframes av-swing {
+  from { transform: rotate(30deg); }
+  to { transform: rotate(-30deg); }
+}
+@keyframes av-step {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2.5px); }
+}
+@keyframes av-breathe {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-0.8px); }
+}
+@keyframes av-shadow {
+  0%, 100% { transform: scaleX(1); }
+  50% { transform: scaleX(0.85); }
+}
+@keyframes lounge-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.25; }
+}
+@keyframes lounge-flicker {
+  0%, 92%, 100% { opacity: 1; }
+  93% { opacity: 0.55; }
+  95% { opacity: 1; }
+  97% { opacity: 0.7; }
+}
+.lounge-led { animation: lounge-blink 1.6s steps(2, jump-none) infinite; }
+.lounge-neon { animation: lounge-flicker 6s linear infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .lounge-avatar *,
+  .lounge-led,
+  .lounge-neon {
+    animation: none !important;
+  }
+}
