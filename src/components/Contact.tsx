@@ -29,7 +29,7 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className="py-24 bg-[var(--color-bg-surface-light)]">
+    <section id="contact" className="pt-6 pb-16">
       <div className="container mx-auto px-6 max-w-5xl">
         <motion.div
           initial="hidden"

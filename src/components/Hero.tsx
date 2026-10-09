@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Code2, Folder, Mail, Download } from "lucide-react";
 import { FaGithub, FaLinkedin, FaFacebook, FaInstagram, FaTiktok } from "react-icons/fa";
@@ -50,7 +51,7 @@ export default function Hero() {
   };
 
   return (
-    <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+    <section id="hero" className="relative min-h-[calc(100vh-9rem)] flex items-center justify-center overflow-hidden py-10">
       {/* Glow Effects */}
       <div className="absolute top-[20%] right-[10%] w-[500px] h-[500px] bg-[var(--color-accent-primary)]/15 blur-[120px] rounded-full -z-10 pointer-events-none" />
       <div className="absolute bottom-[10%] left-[10%] w-[400px] h-[400px] bg-[var(--color-accent-tertiary)]/10 blur-[100px] rounded-full -z-10 pointer-events-none" />
@@ -89,14 +90,14 @@ export default function Hero() {
         </motion.p>
 
         <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
-          <a href="#projects" className="btn btn-primary w-full sm:w-auto px-8 py-3.5 rounded-xl flex items-center justify-center gap-2 bg-gradient-primary text-white shadow-glow hover:scale-105 transition-transform duration-300 font-medium">
+          <Link href="/projects" className="btn btn-primary w-full sm:w-auto px-8 py-3.5 rounded-xl flex items-center justify-center gap-2 bg-gradient-primary text-white shadow-glow hover:scale-105 transition-transform duration-300 font-medium">
             <Folder size={18} />
             <span>View Projects</span>
-          </a>
-          <a href="#contact" className="btn btn-outline w-full sm:w-auto px-8 py-3.5 rounded-xl flex items-center justify-center gap-2 border-2 border-[var(--color-accent-primary)] text-[var(--color-accent-primary)] hover:bg-[var(--color-accent-primary)] hover:text-white transition-all duration-300 font-medium">
+          </Link>
+          <Link href="/contact" className="btn btn-outline w-full sm:w-auto px-8 py-3.5 rounded-xl flex items-center justify-center gap-2 border-2 border-[var(--color-accent-primary)] text-[var(--color-accent-primary)] hover:bg-[var(--color-accent-primary)] hover:text-white transition-all duration-300 font-medium">
             <Mail size={18} />
             <span>Contact Me</span>
-          </a>
+          </Link>
           <a href="/Jrn_Resume-9-21-2026.pdf" download className="btn w-full sm:w-auto px-8 py-3.5 rounded-xl flex items-center justify-center gap-2 border-2 border-[var(--color-accent-secondary)] text-[var(--color-accent-secondary)] hover:bg-[var(--color-accent-secondary)] hover:text-white transition-all duration-300 font-medium">
             <Download size={18} />
             <span>Resume</span>

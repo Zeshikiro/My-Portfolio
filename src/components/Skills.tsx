@@ -60,7 +60,7 @@ export default function Skills() {
   };
 
   return (
-    <section id="skills" className="py-24 bg-[var(--color-bg-surface)]">
+    <section id="skills" className="pt-6 pb-16">
       <div className="container mx-auto px-6 max-w-6xl">
         <motion.div
           initial="hidden"

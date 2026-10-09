@@ -47,7 +47,7 @@ export default function Education() {
   ];
 
   return (
-    <section id="education" className="py-24 bg-[var(--color-bg-surface)]">
+    <section id="education" className="pt-6 pb-16">
       <div className="container mx-auto px-6 max-w-4xl">
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[var(--color-accent-primary)] text-sm uppercase tracking-wider mb-4">

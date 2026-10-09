@@ -17,7 +17,7 @@ export default function Projects() {
   };
 
   return (
-    <section id="projects" className="py-24">
+    <section id="projects" className="pt-6 pb-16">
       <div className="container mx-auto px-6 max-w-6xl">
         <motion.div
           initial="hidden"

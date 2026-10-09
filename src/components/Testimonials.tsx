@@ -50,7 +50,7 @@ export default function Testimonials() {
   };
 
   return (
-    <section id="testimonials" className="py-24 bg-[var(--color-bg-surface)]">
+    <section id="testimonials" className="py-16">
       <div className="container mx-auto px-6 max-w-6xl">
         <motion.div
           initial="hidden"

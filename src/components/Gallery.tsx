@@ -46,7 +46,7 @@ export default function Gallery() {
   };
 
   return (
-    <section id="gallery" className="py-24">
+    <section id="gallery" className="pt-6 pb-16">
       <div className="container mx-auto px-6 max-w-6xl">
         <motion.div
           initial="hidden"

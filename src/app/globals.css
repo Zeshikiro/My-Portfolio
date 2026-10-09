@@ -22,6 +22,7 @@
 
   --font-heading: var(--font-space-grotesk);
   --font-body: var(--font-inter);
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
 
   --radius-sm: 8px;
   --radius-md: 12px;

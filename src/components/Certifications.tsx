@@ -147,7 +147,7 @@ export default function Certifications() {
   };
 
   return (
-    <section id="certifications" className="py-24">
+    <section id="certifications" className="pt-6 pb-16">
       <div className="container mx-auto px-6 max-w-6xl">
         <motion.div
           initial="hidden"

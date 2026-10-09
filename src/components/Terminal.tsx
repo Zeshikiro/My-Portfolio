@@ -2,16 +2,23 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useRef, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { Terminal as TerminalIcon, X } from "lucide-react";
+import { ALL_TABS, findTabByName } from "@/lib/tabs";
+
+const hl = (s: string) => `<span class="text-[var(--color-accent-primary)]">${s}</span>`;
 
 const COMMANDS: Record<string, string> = {
   help: `Available commands:
- - <span class="text-[var(--color-accent-primary)]">whoami</span>: About me
- - <span class="text-[var(--color-accent-primary)]">skills</span>: My tech stack
- - <span class="text-[var(--color-accent-primary)]">projects</span>: View projects
- - <span class="text-[var(--color-accent-primary)]">contact</span>: Get email
- - <span class="text-[var(--color-accent-primary)]">socials</span>: View social links
- - <span class="text-[var(--color-accent-primary)]">clear</span>: Clear terminal`,
+ - ${hl("ls")}: List all tabs
+ - ${hl("cd &lt;tab&gt;")}: Open a tab (e.g. cd skills)
+ - ${hl("select * from &lt;tab&gt;")}: Same thing, SQL style
+ - ${hl("whoami")}: About me
+ - ${hl("skills")}: My core competencies
+ - ${hl("projects")}: View projects
+ - ${hl("contact")}: Get email
+ - ${hl("socials")}: View social links
+ - ${hl("clear")}: Clear terminal`,
   whoami: `John Ryan Nicolas
 IT Student & Developer
 Lead Developer of STEP-UP AR App.`,
@@ -23,7 +30,11 @@ Lead Developer of STEP-UP AR App.`,
  - GitHub Open Source`,
   contact: "Email: johnryannicolas43@gmail.com",
   socials: `GitHub: github.com/Zeshikiro
-LinkedIn: linkedin.com/in/john-ryan-nicolas-21b058332`,
+LinkedIn: linkedin.com/in/john-ryan-nicolas-21b058332
+Facebook: facebook.com/johnryan.nicolas.3
+Instagram: instagram.com/zeshikiro
+TikTok: tiktok.com/@zeshikiro`,
+  ls: ALL_TABS.map((t) => hl(t.table)).join("  "),
 };
 
 type Line = { id: number; html: string };
