@@ -15,15 +15,81 @@ import {
   type ChatMsg, type Dir, type PlayerInfo, type PresenceMeta, type Profile,
 } from "@/lib/lounge";
 
+/** Spring-driven animation state (R.E.P.O.-style wobble). */
+type Rig = {
+  lean: number; leanV: number; // body tilt (deg)
+  hr: number; hrV: number;     // head rotation (deg)
+  hx: number; hxV: number;     // head offset (px)
+  sq: number; sqV: number;     // squash/stretch
+  bob: number; phase: number;  // step bounce
+  lx: number; ly: number;      // pupil look
+  lastNvx: number; lastNvy: number; still: number; wasMoving: boolean;
+};
+
 /** Simulation state for one avatar. Lives in a ref so movement never re-renders React. */
-type Sim = { x: number; y: number; tx: number; ty: number; dir: Dir; moving: boolean; el: HTMLDivElement | null };
+type Sim = { x: number; y: number; tx: number; ty: number; dir: Dir; moving: boolean; el: HTMLDivElement | null; rig: Rig };
 type Bubble = { text: string; key: string };
 type Status = "offline" | "connecting" | "live" | "error";
 
 const SPAWN = { x: 500, y: 560 };
 const MAX_MESSAGES = 100;
+const STEP_CYCLE = 0.3; // seconds per left+right step, matches av-stomp in CSS
 let keySeq = 0;
 const nextKey = (p: string) => `${p}-${Date.now()}-${keySeq++}`;
+
+const newRig = (): Rig => ({
+  lean: 0, leanV: 0, hr: 0, hrV: 0, hx: 0, hxV: 0, sq: 1, sqV: 0, bob: 0, phase: 0, lx: 0, ly: 0,
+  lastNvx: 0, lastNvy: 0, still: 1, wasMoving: false,
+});
+
+/** Damped spring step. Returns [position, velocity]. */
+function spring(x: number, v: number, target: number, k: number, c: number, dt: number): [number, number] {
+  const nv = v + (k * (target - x) - c * v) * dt;
+  return [x + nv * dt, nv];
+}
+
+/** Advances the rig. vx/vy are the avatar's current velocity in world units/s. */
+function animateRig(s: Sim, vx: number, vy: number, dt: number) {
+  const r = s.rig;
+  // Debounce stops: remote avatars can pause for a frame or two between network
+  // updates, which shouldn't count as "stopped" (no twitchy start/stop wobble).
+  r.still = s.moving ? 0 : r.still + dt;
+  const walking = s.moving || r.still < 0.12;
+  const nvx = s.moving ? Math.max(-1, Math.min(1, vx / SPEED)) : walking ? r.lastNvx : 0;
+  const nvy = s.moving ? Math.max(-1, Math.min(1, vy / SPEED)) : walking ? r.lastNvy : 0;
+
+  // Start/stop impulses: squash, and the head flops (lags on start, overshoots on stop).
+  if (walking !== r.wasMoving) {
+    if (walking) {
+      r.sqV -= 2.2;
+      r.hrV -= nvx * 140;
+    } else {
+      r.sqV -= 3.2;
+      r.hrV += r.lastNvx * 220;
+      r.leanV += r.lastNvx * 90;
+    }
+    r.wasMoving = walking;
+  }
+  if (s.moving) {
+    r.lastNvx = nvx;
+    r.lastNvy = nvy;
+  }
+  r.phase = walking ? r.phase + (dt * Math.PI * 2) / STEP_CYCLE : 0;
+
+  const waddle = walking ? Math.sin(r.phase) * 6 : 0;
+  [r.lean, r.leanV] = spring(r.lean, r.leanV, nvx * 9 + waddle, 180, 16, dt);
+  [r.hr, r.hrV] = spring(r.hr, r.hrV, -nvx * 10 - waddle * 0.4, 110, 6.5, dt); // low damping = wobbly
+  [r.hx, r.hxV] = spring(r.hx, r.hxV, -nvx * 2, 120, 10, dt);
+  [r.sq, r.sqV] = spring(r.sq, r.sqV, 1, 420, 13, dt);
+  r.sq = Math.max(0.78, Math.min(1.22, r.sq));
+
+  const bobTarget = walking ? -Math.abs(Math.sin(r.phase)) * 2.4 : 0;
+  r.bob += (bobTarget - r.bob) * Math.min(1, dt * (walking ? 30 : 10));
+
+  const e = Math.min(1, dt * 10);
+  r.lx += ((walking ? nvx : s.dir === "right" ? 0.45 : -0.45) * 1.7 - r.lx) * e;
+  r.ly += ((walking ? nvy : 0) * 1.2 - r.ly) * e;
+}
 
 function paint(s: Sim) {
   const el = s.el;
@@ -34,6 +100,15 @@ function paint(s: Sim) {
   const moving = String(s.moving);
   if (el.dataset.moving !== moving) el.dataset.moving = moving;
   if (el.dataset.dir !== s.dir) el.dataset.dir = s.dir;
+  const r = s.rig;
+  const st = el.style;
+  st.setProperty("--lean", `${r.lean.toFixed(2)}deg`);
+  st.setProperty("--hr", `${r.hr.toFixed(2)}deg`);
+  st.setProperty("--hx", `${r.hx.toFixed(2)}px`);
+  st.setProperty("--sq", r.sq.toFixed(3));
+  st.setProperty("--bob", `${r.bob.toFixed(2)}px`);
+  st.setProperty("--lx", `${r.lx.toFixed(2)}px`);
+  st.setProperty("--ly", `${r.ly.toFixed(2)}px`);
 }
 
 export default function Lounge() {
@@ -100,7 +175,7 @@ export default function Lounge() {
   const ensureSim = useCallback((id: string, x: number, y: number, dir: Dir) => {
     let s = sims.current.get(id);
     if (!s) {
-      s = { x, y, tx: x, ty: y, dir, moving: false, el: null };
+      s = { x, y, tx: x, ty: y, dir, moving: false, el: null, rig: newRig() };
       sims.current.set(id, s);
     }
     return s;
@@ -258,18 +333,24 @@ export default function Lounge() {
         const dx = s.tx - s.x;
         const dy = s.ty - s.y;
         const d = Math.hypot(dx, dy);
+        let vx = 0;
+        let vy = 0;
         if (d < 1) {
           s.x = s.tx;
           s.y = s.ty;
           s.moving = false;
         } else {
           // Remote players walk slightly faster so they catch up after network delay.
-          const step = Math.min(d, (id === selfId ? SPEED : SPEED * 1.15) * dt);
+          const speed = id === selfId ? SPEED : SPEED * 1.15;
+          const step = Math.min(d, speed * dt);
           s.x += (dx / d) * step;
           s.y += (dy / d) * step;
           s.moving = true;
+          vx = (dx / d) * speed;
+          vy = (dy / d) * speed;
           if (Math.abs(dx) > 0.5) s.dir = dx < 0 ? "left" : "right";
         }
+        animateRig(s, vx, vy, dt);
         paint(s);
       }
 

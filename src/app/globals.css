@@ -56,46 +56,72 @@
 
 /* ---------- Lounge (/play) ---------- */
 
-.lounge-avatar .av-flip {
-  transition: transform 0.12s ease;
+/* Avatar rig. Lounge.tsx runs spring physics per avatar and writes these vars
+   every frame; CSS just applies them, so React never re-renders while walking. */
+.lounge-avatar {
+  --lean: 0deg;  /* body tilt (waddle + lean into movement) */
+  --hr: 0deg;    /* head rotation, springy, lags behind the body */
+  --hx: 0px;     /* head sideways offset */
+  --sq: 1;       /* squash (<1) / stretch (>1) */
+  --bob: 0px;    /* step bounce */
+  --lx: 0px;     /* pupil look offset */
+  --ly: 0px;
+}
+.lounge-avatar .av-rig {
   transform-box: view-box;
-  transform-origin: 50% 50%;
+  transform-origin: 24px 60px;
+  transform: translateY(var(--bob)) rotate(var(--lean)) scale(calc(2 - var(--sq)), var(--sq));
 }
-.lounge-avatar[data-dir="left"] .av-flip {
-  transform: scaleX(-1);
+.lounge-avatar .av-head {
+  transform-box: view-box;
+  transform-origin: 24px 34px;
+  transform: translateX(var(--hx)) rotate(var(--hr));
 }
-.lounge-avatar .av-leg,
-.lounge-avatar .av-arm {
+.lounge-avatar .av-pupils {
+  transform: translate(var(--lx), var(--ly));
+}
+.lounge-avatar .av-eyes {
   transform-box: fill-box;
-  transform-origin: 50% 10%;
+  transform-origin: center;
+  animation: av-blink 4.2s infinite;
+  animation-delay: var(--blink-delay, 0s);
 }
 .lounge-avatar .av-bob {
   animation: av-breathe 2.6s ease-in-out infinite;
 }
 .lounge-avatar[data-moving="true"] .av-bob {
-  animation: av-step 0.34s ease-in-out infinite;
+  animation: none;
 }
-.lounge-avatar[data-moving="true"] .av-leg-front,
-.lounge-avatar[data-moving="true"] .av-arm-back {
-  animation: av-swing 0.34s ease-in-out infinite alternate;
+.lounge-avatar .av-arm {
+  transform-box: fill-box;
+  transform-origin: 50% 15%;
 }
-.lounge-avatar[data-moving="true"] .av-leg-back,
-.lounge-avatar[data-moving="true"] .av-arm-front {
-  animation: av-swing 0.34s ease-in-out infinite alternate-reverse;
+.lounge-avatar .av-antenna {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  transform: rotate(calc(var(--hr) * -1.6));
 }
+.lounge-avatar[data-moving="true"] .av-leg-l { animation: av-stomp 0.3s ease-in-out infinite; }
+.lounge-avatar[data-moving="true"] .av-leg-r { animation: av-stomp 0.3s ease-in-out infinite; animation-delay: -0.15s; }
+.lounge-avatar[data-moving="true"] .av-arm-l { animation: av-flail 0.3s ease-in-out infinite alternate; }
+.lounge-avatar[data-moving="true"] .av-arm-r { animation: av-flail 0.3s ease-in-out infinite alternate-reverse; }
 .lounge-avatar[data-moving="true"] .av-shadow {
-  animation: av-shadow 0.34s ease-in-out infinite;
+  animation: av-shadow 0.3s ease-in-out infinite;
   transform-box: fill-box;
   transform-origin: center;
 }
 
-@keyframes av-swing {
-  from { transform: rotate(30deg); }
-  to { transform: rotate(-30deg); }
-}
-@keyframes av-step {
+@keyframes av-stomp {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-2.5px); }
+  50% { transform: translateY(-3.5px); }
+}
+@keyframes av-flail {
+  from { transform: rotate(28deg); }
+  to { transform: rotate(-28deg); }
+}
+@keyframes av-blink {
+  0%, 94%, 100% { transform: scaleY(1); }
+  96% { transform: scaleY(0.1); }
 }
 @keyframes av-breathe {
   0%, 100% { transform: translateY(0); }
@@ -103,7 +129,7 @@
 }
 @keyframes av-shadow {
   0%, 100% { transform: scaleX(1); }
-  50% { transform: scaleX(0.85); }
+  50% { transform: scaleX(0.82); }
 }
 @keyframes lounge-blink {
   0%, 100% { opacity: 1; }
