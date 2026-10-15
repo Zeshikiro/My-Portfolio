@@ -1,4 +1,5 @@
 // Shared config, types and helpers for the multiplayer lounge (/play).
+import { filterText } from "./chatSafety";
 
 /** Logical room size. Everything is stored in these units and rendered as percentages. */
 export const WORLD = { w: 1000, h: 625, wall: 190 } as const;
@@ -45,7 +46,7 @@ export type Profile = { name: string; avatar: string };
 export type PlayerInfo = { id: string; name: string; avatar: string };
 
 /** What each client publishes through Supabase Presence. */
-export type PresenceMeta = { name: string; avatar: string; x: number; y: number; dir: Dir };
+export type PresenceMeta = { name: string; avatar: string; x: number; y: number; dir: Dir; sit?: boolean };
 
 export type ChatMsg = {
   key: string;
@@ -82,17 +83,9 @@ export function cleanText(raw: unknown, max: number): string {
     .slice(0, max);
 }
 
-// Word stems to mask (English + common Tagalog). Matched at the start of a
-// word, so "fucking" is caught but "computation" isn't caught by "puta".
-const BLOCKED = [
-  "fuck", "shit", "bullshit", "bitch", "asshole", "cunt", "dick", "pussy", "nigg", "fag",
-  "slut", "whore", "retard", "puta", "tangina", "tang ina", "gago", "gaga", "bobo",
-  "ulol", "pakyu", "kupal", "tarantado", "leche", "punyeta", "hayop ka", "pokpok",
-];
-const BLOCKED_RE = new RegExp(`\\b(${BLOCKED.map((w) => w.replace(/ /g, "\\s*")).join("|")})\\w*`, "gi");
-
+/** Masks offensive words in any supported language (see chatSafety.ts). */
 export function maskProfanity(text: string): string {
-  return text.replace(BLOCKED_RE, (m) => m[0] + "*".repeat(Math.max(1, m.length - 1)));
+  return filterText(text).text;
 }
 
 /** Per-tab id, so two tabs show up as two avatars. */

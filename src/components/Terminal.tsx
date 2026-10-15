@@ -176,7 +176,7 @@ export default function Terminal() {
                 </span>
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="text-[var(--color-text-muted)] hover:text-white transition-colors"
+                  className="text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors"
                 >
                   <X size={16} />
                 </button>

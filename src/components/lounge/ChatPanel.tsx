@@ -2,24 +2,28 @@
 
 import { useEffect, useRef, useState, type RefObject } from "react";
 import { motion } from "framer-motion";
-import { Hash, Send, Users } from "lucide-react";
+import { Hash, Send, Users, VolumeX } from "lucide-react";
 import { CHAT_MAX, getAvatar, type ChatMsg, type PlayerInfo } from "@/lib/lounge";
+
+export type SendResult = { ok: boolean; message?: string };
 
 type Props = {
   messages: ChatMsg[];
   players: PlayerInfo[];
   selfId: string;
   inputRef: RefObject<HTMLInputElement | null>;
-  /** Returns false when the message was rejected (empty or on cooldown). */
-  onSend: (text: string) => boolean;
+  /** Runs the safety checks; `message` explains a rejection or carries a warning. */
+  onSend: (text: string) => SendResult;
+  muted: ReadonlySet<string>;
+  onToggleMute: (id: string) => void;
 };
 
 const time = (ts: number) =>
   new Date(ts).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 
-export default function ChatPanel({ messages, players, selfId, inputRef, onSend }: Props) {
+export default function ChatPanel({ messages, players, selfId, inputRef, onSend, muted, onToggleMute }: Props) {
   const [text, setText] = useState("");
-  const [slowDown, setSlowDown] = useState(false);
+  const [notice, setNotice] = useState<{ text: string; error: boolean; key: number } | null>(null);
   const [showPeople, setShowPeople] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
 
@@ -28,16 +32,20 @@ export default function ChatPanel({ messages, players, selfId, inputRef, onSend 
     if (el) el.scrollTop = el.scrollHeight;
   }, [messages]);
 
+  useEffect(() => {
+    if (!notice) return;
+    const t = setTimeout(() => setNotice(null), notice.error ? 2600 : 3500);
+    return () => clearTimeout(t);
+  }, [notice]);
+
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!text.trim()) return;
-    if (onSend(text)) {
-      setText("");
-    } else {
-      setSlowDown(true);
-      setTimeout(() => setSlowDown(false), 1200);
-    }
+    const res = onSend(text);
+    if (res.ok) setText("");
+    if (res.message) setNotice({ text: res.message, error: !res.ok, key: Date.now() });
   };
+  const shake = notice?.error ?? false;
 
   return (
     // On desktop the inner panel is absolutely positioned so it matches the room's
@@ -72,7 +80,18 @@ export default function ChatPanel({ messages, players, selfId, inputRef, onSend 
               >
                 <span className="w-2 h-2 rounded-full" style={{ background: getAvatar(p.avatar).body }} />
                 {p.name}
-                {p.id === selfId && <span className="text-[var(--color-text-muted)]">(you)</span>}
+                {p.id === selfId ? (
+                  <span className="text-[var(--color-text-muted)]">(you)</span>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => onToggleMute(p.id)}
+                    title={muted.has(p.id) ? "Unmute" : "Mute"}
+                    className="ml-1 text-[var(--color-text-muted)] hover:text-[var(--color-accent-tertiary)]"
+                  >
+                    <VolumeX size={11} className={muted.has(p.id) ? "text-[var(--color-accent-tertiary)]" : "opacity-40"} />
+                  </button>
+                )}
               </span>
             ))}
           </motion.div>
@@ -112,7 +131,7 @@ export default function ChatPanel({ messages, players, selfId, inputRef, onSend 
         {/* Input */}
         <form onSubmit={submit} className="p-3 border-t border-[var(--color-glass-border)]">
           <motion.div
-            animate={slowDown ? { x: [0, -6, 6, -4, 4, 0] } : { x: 0 }}
+            animate={shake ? { x: [0, -6, 6, -4, 4, 0] } : { x: 0 }}
             transition={{ duration: 0.35 }}
             className="flex items-center gap-2 rounded-xl bg-[var(--color-bg-primary)] border border-[var(--color-glass-border)] focus-within:border-[var(--color-accent-primary)] transition-colors pl-3 pr-1.5"
           >
@@ -138,8 +157,8 @@ export default function ChatPanel({ messages, players, selfId, inputRef, onSend 
               <Send size={14} />
             </button>
           </motion.div>
-          <p className="h-4 mt-1 font-mono text-[10px] text-[var(--color-accent-tertiary)]">
-            {slowDown ? "Slow down a little…" : ""}
+          <p className={`h-4 mt-1 font-mono text-[10px] ${notice?.error ? "text-[var(--color-accent-tertiary)]" : "text-[var(--color-accent-secondary)]"}`}>
+            {notice?.text ?? ""}
           </p>
         </form>
       </div>

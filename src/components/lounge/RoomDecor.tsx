@@ -1,6 +1,17 @@
 import { memo, type CSSProperties, type ReactNode } from "react";
 import { WORLD } from "@/lib/lounge";
 
+/** One-shot effect triggers: item id -> timestamp. Changing the value replays the animation. */
+export type RoomFx = Partial<Record<string, number>>;
+
+type Props = {
+  day: boolean;
+  fx: RoomFx;
+  /** Clock hand angles in degrees. */
+  hourDeg: number;
+  minDeg: number;
+};
+
 /** Positions a piece of decor in world units. `z` defaults to its bottom edge for depth sorting. */
 function Item({
   x, y, w, h, z, className = "", style, children,
@@ -25,42 +36,88 @@ function Item({
   );
 }
 
+/** Two stacked layers that crossfade between night and day. */
+function Fade({ day, night, dayStyle, className = "" }: {
+  day: boolean; night: CSSProperties; dayStyle: CSSProperties; className?: string;
+}) {
+  return (
+    <>
+      <span className={`absolute inset-0 transition-opacity duration-700 ${className}`} style={{ ...night, opacity: day ? 0 : 1 }} />
+      <span className={`absolute inset-0 transition-opacity duration-700 ${className}`} style={{ ...dayStyle, opacity: day ? 1 : 0 }} />
+    </>
+  );
+}
+
 const STARS = [
   [12, 18], [30, 40], [48, 12], [70, 30], [86, 16], [22, 64], [58, 52], [92, 58], [40, 78], [76, 72],
 ];
 
-function RoomDecor() {
+function RoomDecor({ day, fx, hourDeg, minDeg }: Props) {
   return (
     <>
       {/* Back wall */}
-      <Item
-        x={0} y={0} w={1000} h={WORLD.wall} z={0}
-        style={{
-          background:
-            "repeating-linear-gradient(90deg, transparent 0 79px, rgba(255,255,255,0.025) 79px 80px), linear-gradient(180deg, #17172b 0%, #1c1c36 100%)",
-        }}
-      />
-      <Item x={0} y={WORLD.wall - 6} w={1000} h={8} z={1} style={{ background: "linear-gradient(90deg, #6c63ff55, #00d4aa55)" }} />
+      <Item x={0} y={0} w={1000} h={WORLD.wall} z={0}>
+        <Fade
+          day={day}
+          night={{ background: "repeating-linear-gradient(90deg, transparent 0 79px, rgba(255,255,255,0.025) 79px 80px), linear-gradient(180deg, #17172b 0%, #1c1c36 100%)" }}
+          dayStyle={{ background: "repeating-linear-gradient(90deg, transparent 0 79px, rgba(60,40,120,0.05) 79px 80px), linear-gradient(180deg, #ece7fa 0%, #ddd5f2 100%)" }}
+        />
+      </Item>
+      <Item x={0} y={WORLD.wall - 6} w={1000} h={8} z={1} style={{ background: "linear-gradient(90deg, #6c63ff88, #00d4aa88)" }} />
 
       {/* Floor */}
-      <Item
-        x={0} y={WORLD.wall + 2} w={1000} h={WORLD.h - WORLD.wall} z={0}
-        style={{
-          background:
-            "repeating-linear-gradient(180deg, transparent 0 7.6%, rgba(0,0,0,0.25) 7.6% 7.9%), repeating-linear-gradient(90deg, transparent 0 15%, rgba(255,255,255,0.025) 15% 15.2%), linear-gradient(180deg, #1a1622 0%, #14121b 100%)",
-        }}
-      />
+      <Item x={0} y={WORLD.wall + 2} w={1000} h={WORLD.h - WORLD.wall} z={0}>
+        <Fade
+          day={day}
+          night={{ background: "repeating-linear-gradient(180deg, transparent 0 7.6%, rgba(0,0,0,0.25) 7.6% 7.9%), repeating-linear-gradient(90deg, transparent 0 15%, rgba(255,255,255,0.025) 15% 15.2%), linear-gradient(180deg, #1a1622 0%, #14121b 100%)" }}
+          dayStyle={{ background: "repeating-linear-gradient(180deg, transparent 0 7.6%, rgba(90,60,30,0.14) 7.6% 7.9%), repeating-linear-gradient(90deg, transparent 0 15%, rgba(90,60,30,0.06) 15% 15.2%), linear-gradient(180deg, #dcc4a3 0%, #ccb08c 100%)" }}
+        />
+      </Item>
 
-      {/* Window with night sky */}
-      <Item x={60} y={28} w={200} h={122} z={1} className="rounded-[6%] border-[3px] border-[#2e2e4a] overflow-hidden"
-        style={{ background: "linear-gradient(180deg, #0b1030 0%, #23184a 70%, #3a1f4d 100%)" }}>
-        {STARS.map(([l, t], i) => (
-          <span key={i} className="absolute w-[2px] h-[2px] rounded-full bg-white lounge-led"
-            style={{ left: `${l}%`, top: `${t}%`, animationDelay: `${i * 0.37}s`, animationDuration: `${2 + (i % 3)}s` }} />
-        ))}
-        <span className="absolute right-[12%] top-[14%] w-[18%] aspect-square rounded-full bg-[#f5f1d0] shadow-[0_0_18px_#f5f1d088]" />
-        <span className="absolute bottom-0 left-0 right-0 h-[28%]"
-          style={{ background: "linear-gradient(0deg,#0d0d18 0 40%,transparent 40%), repeating-linear-gradient(90deg,#11111f 0 9%,#191930 9% 15%,#0f0f1c 15% 26%,transparent 26% 29%)" }} />
+      {/* Sunbeam / moonbeam from the window onto the floor */}
+      <Item x={40} y={150} w={360} h={330} z={3} className="transition-opacity duration-700" style={{ opacity: day ? 0.55 : 0.18 }}>
+        <span
+          className="absolute inset-0"
+          style={{
+            clipPath: "polygon(6% 0%, 56% 0%, 100% 100%, 22% 100%)",
+            background: day
+              ? "linear-gradient(180deg, rgba(255,236,170,0.55), rgba(255,236,170,0))"
+              : "linear-gradient(180deg, rgba(160,170,255,0.4), rgba(160,170,255,0))",
+          }}
+        />
+      </Item>
+
+      {/* Window */}
+      <Item x={60} y={28} w={200} h={122} z={1} className="rounded-[6%] border-[3px] border-[#2e2e4a] overflow-hidden">
+        <Fade
+          day={day}
+          night={{ background: "linear-gradient(180deg, #0b1030 0%, #23184a 70%, #3a1f4d 100%)" }}
+          dayStyle={{ background: "linear-gradient(180deg, #5fb8f2 0%, #a8dcfb 70%, #d8f0ff 100%)" }}
+        />
+        {/* Night: stars + moon */}
+        <span className="absolute inset-0 transition-opacity duration-700" style={{ opacity: day ? 0 : 1 }}>
+          {STARS.map(([l, t], i) => (
+            <span key={i} className="absolute w-[2px] h-[2px] rounded-full bg-white lounge-led"
+              style={{ left: `${l}%`, top: `${t}%`, animationDelay: `${i * 0.37}s`, animationDuration: `${2 + (i % 3)}s` }} />
+          ))}
+          <span className="absolute right-[12%] top-[14%] w-[18%] aspect-square rounded-full bg-[#f5f1d0] shadow-[0_0_18px_#f5f1d088]">
+            <span className="absolute left-[22%] top-[30%] w-[22%] aspect-square rounded-full bg-[#ddd8b4]" />
+            <span className="absolute left-[55%] top-[58%] w-[14%] aspect-square rounded-full bg-[#ddd8b4]" />
+          </span>
+        </span>
+        {/* Day: sun + drifting clouds */}
+        <span className="absolute inset-0 transition-opacity duration-700" style={{ opacity: day ? 1 : 0 }}>
+          <span className="lounge-sun absolute right-[10%] top-[10%] w-[20%] aspect-square rounded-full bg-[#ffd54a]" />
+          <Cloud top="18%" width="34%" delay="0s" duration="38s" />
+          <Cloud top="40%" width="26%" delay="-14s" duration="30s" />
+          <Cloud top="8%" width="20%" delay="-24s" duration="46s" />
+        </span>
+        {/* City skyline */}
+        <span className="absolute bottom-0 left-0 right-0 h-[28%] transition-[filter] duration-700"
+          style={{
+            background: "linear-gradient(0deg,#0d0d18 0 40%,transparent 40%), repeating-linear-gradient(90deg,#11111f 0 9%,#191930 9% 15%,#0f0f1c 15% 26%,transparent 26% 29%)",
+            filter: day ? "invert(0.62) sepia(0.25) hue-rotate(180deg) brightness(1.05)" : "none",
+          }} />
         <span className="absolute inset-y-0 left-1/2 w-[3px] -translate-x-1/2 bg-[#2e2e4a]" />
         <span className="absolute inset-x-0 top-1/2 h-[3px] -translate-y-1/2 bg-[#2e2e4a]" />
       </Item>
@@ -68,17 +125,22 @@ function RoomDecor() {
       {/* Neon sign */}
       <Item x={330} y={38} w={340} h={84} z={1} className="flex items-center justify-center">
         <span
-          className="lounge-neon font-heading font-bold tracking-wide text-[clamp(14px,4.2cqw,46px)] leading-none"
+          key={fx.neon ?? 0}
+          className={`font-heading font-bold tracking-wide text-[clamp(14px,4.2cqw,46px)] leading-none transition-[color,text-shadow] duration-700 ${fx.neon ? "lounge-neon-burst" : "lounge-neon"}`}
           style={{
-            color: "#f3f0ff",
-            textShadow: "0 0 6px #6c63ff, 0 0 14px #6c63ff, 0 0 28px #00d4aa88",
+            color: day ? "#5a50f0" : "#f3f0ff",
+            textShadow: day
+              ? "0 0 4px #6c63ff66, 0 2px 0 #00000014"
+              : "0 0 6px #6c63ff, 0 0 14px #6c63ff, 0 0 28px #00d4aa88",
           }}
         >
           the lounge
         </span>
       </Item>
       <Item x={380} y={126} w={240} h={18} z={1} className="flex items-center justify-center">
-        <span className="font-mono text-[clamp(6px,1.1cqw,12px)] text-[#8888a0]">LISTEN lounge; -- say hi 👋</span>
+        <span className="font-mono text-[clamp(6px,1.1cqw,12px)] transition-colors duration-700" style={{ color: day ? "#6a6a88" : "#8888a0" }}>
+          LISTEN lounge; -- say hi 👋
+        </span>
       </Item>
 
       {/* Poster */}
@@ -87,33 +149,45 @@ function RoomDecor() {
         <span className="font-mono text-[clamp(4px,0.8cqw,9px)] text-[#a29bfe] text-center leading-tight">SELECT *<br />FROM fun;</span>
       </Item>
 
-      {/* Clock */}
-      <Item x={786} y={52} w={44} h={44} z={1} className="rounded-full border-2 border-[#3a3a5c] bg-[#151528]">
-        <span className="absolute left-1/2 top-[18%] w-[2px] h-[34%] -translate-x-1/2 bg-[#e8e8e8] origin-bottom" />
-        <span className="absolute left-1/2 top-1/2 w-[30%] h-[2px] bg-[#00d4aa] origin-left rotate-[30deg]" />
+      {/* Clock (shows the visitor's real local time) */}
+      <Item x={778} y={46} w={60} h={60} z={1}>
+        <div className="absolute inset-0 rounded-full border-[3px] border-[#3a3a5c] shadow-[0_2px_0_#00000033] transition-colors duration-700"
+          style={{ background: day ? "#fdfcff" : "#151528" }}>
+          {Array.from({ length: 12 }).map((_, i) => (
+            <span key={i} className="absolute left-1/2 top-1/2 w-[2px] h-[10%] -translate-x-1/2 origin-top"
+              style={{ transform: `rotate(${i * 30}deg) translateY(-380%)`, background: day ? "#8888a0" : "#555570" }} />
+          ))}
+          <span className="absolute left-1/2 bottom-1/2 w-[3px] h-[26%] rounded-full origin-bottom transition-colors duration-700"
+            style={{ transform: `translateX(-50%) rotate(${hourDeg}deg)`, background: day ? "#1a1a2e" : "#e8e8e8" }} />
+          <span className="absolute left-1/2 bottom-1/2 w-[2px] h-[36%] rounded-full origin-bottom bg-[#00d4aa]"
+            style={{ transform: `translateX(-50%) rotate(${minDeg}deg)` }} />
+          <span className="absolute left-1/2 top-1/2 w-[10%] aspect-square -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#6c63ff]" />
+          <span className="absolute left-1/2 top-[64%] -translate-x-1/2 text-[clamp(5px,1cqw,11px)] leading-none">{day ? "☀️" : "🌙"}</span>
+        </div>
       </Item>
 
-      {/* Server rack (a small nod to the database theme) */}
-      <Item x={856} y={34} w={92} h={172} className="rounded-[8%] bg-[#0e0e18] border-2 border-[#2a2a42] p-[8%] flex flex-col gap-[6%]">
-        {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="flex-1 rounded-sm bg-[#181828] border border-[#25253a] flex items-center gap-[8%] px-[10%]">
-            <span className="lounge-led w-[9%] aspect-square rounded-full"
-              style={{ background: i % 3 === 0 ? "#00d4aa" : i % 3 === 1 ? "#6c63ff" : "#ff6b9d", animationDelay: `${i * 0.23}s`, animationDuration: `${1.1 + (i % 4) * 0.35}s` }} />
-            <span className="lounge-led w-[9%] aspect-square rounded-full bg-[#00d4aa]" style={{ animationDelay: `${i * 0.41}s` }} />
-            <span className="flex-1 h-[2px] bg-[#2a2a42]" />
-          </div>
-        ))}
-        <span className="text-center font-mono text-[clamp(4px,0.8cqw,9px)] text-[#555570]">jrn_db</span>
+      {/* Server rack */}
+      <Item x={856} y={34} w={92} h={172}>
+        <div key={fx.server ?? 0} className={`absolute inset-0 rounded-[8%] bg-[#0e0e18] border-2 border-[#2a2a42] p-[8%] flex flex-col gap-[6%] ${fx.server ? "lounge-busy" : ""}`}>
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="flex-1 rounded-sm bg-[#181828] border border-[#25253a] flex items-center gap-[8%] px-[10%]">
+              <span className="lounge-led w-[9%] aspect-square rounded-full"
+                style={{ background: i % 3 === 0 ? "#00d4aa" : i % 3 === 1 ? "#6c63ff" : "#ff6b9d", animationDelay: `${i * 0.23}s`, animationDuration: fx.server ? "0.2s" : `${1.1 + (i % 4) * 0.35}s` }} />
+              <span className="lounge-led w-[9%] aspect-square rounded-full bg-[#00d4aa]" style={{ animationDelay: `${i * 0.41}s`, animationDuration: fx.server ? "0.15s" : undefined }} />
+              <span className="flex-1 h-[2px] bg-[#2a2a42]" />
+            </div>
+          ))}
+          <span className="text-center font-mono text-[clamp(4px,0.8cqw,9px)] text-[#555570]">jrn_db</span>
+        </div>
       </Item>
 
       {/* Plant by the window */}
-      <Plant x={282} y={118} w={56} h={96} />
+      <Plant x={282} y={118} w={56} h={96} fx={fx.plant1} />
 
       {/* Rug */}
       <Item x={290} y={322} w={420} h={176} z={2} className="rounded-[50%]"
         style={{
-          background:
-            "radial-gradient(ellipse at center, #2a2350 0 45%, #3a2f6e 45% 49%, #241e44 49% 70%, #6c63ff55 70% 72%, #1f1a3a 72%)",
+          background: "radial-gradient(ellipse at center, #2a2350 0 45%, #3a2f6e 45% 49%, #241e44 49% 70%, #6c63ff55 70% 72%, #1f1a3a 72%)",
           boxShadow: "inset 0 0 0 2px #00000033",
         }}
       />
@@ -123,6 +197,13 @@ function RoomDecor() {
         <div className="w-full h-[55%] rounded-[40%] bg-[#3b2d24] border-2 border-[#4d3b2f] shadow-[0_6px_0_#2a2019] relative">
           <span className="absolute left-[28%] top-[18%] w-[13%] h-[52%] rounded-sm bg-[#e8e8e8]" />
           <span className="absolute left-[56%] top-[24%] w-[22%] h-[42%] rounded-sm bg-[#6c63ff]" />
+          {fx.coffee && (
+            <span key={fx.coffee} className="absolute left-[30%] -top-[60%] w-[10%] h-[80%]">
+              <span className="lounge-steam absolute left-0 bottom-0 w-full aspect-square rounded-full bg-white/60" />
+              <span className="lounge-steam absolute left-[60%] bottom-0 w-full aspect-square rounded-full bg-white/50" style={{ animationDelay: "0.2s" }} />
+              <span className="lounge-steam absolute -left-[40%] bottom-0 w-full aspect-square rounded-full bg-white/40" style={{ animationDelay: "0.4s" }} />
+            </span>
+          )}
         </div>
         <div className="flex justify-between w-[70%] flex-1">
           <span className="w-[8%] h-full bg-[#2a2019]" />
@@ -146,23 +227,44 @@ function RoomDecor() {
       <BeanBag x={212} y={512} color="#00d4aa" shade="#00a184" />
 
       {/* Corner plant */}
-      <Plant x={918} y={518} w={60} h={100} />
+      <Plant x={918} y={518} w={60} h={100} fx={fx.plant2} />
 
       {/* Welcome mat at the "door" (spawn point) */}
       <Item x={430} y={580} w={140} h={34} z={2} className="rounded-md bg-[#2a2440] border border-[#3a3360] flex items-center justify-center">
         <span className="font-mono text-[clamp(5px,1cqw,11px)] tracking-[0.2em] text-[#8888a0]">WELCOME</span>
       </Item>
+
+      {/* Night tint over the whole room */}
+      <Item x={0} y={0} w={1000} h={WORLD.h} z={900} className="transition-opacity duration-700"
+        style={{ background: "radial-gradient(ellipse at 50% 40%, transparent 40%, rgba(10,8,30,0.35) 100%)", opacity: day ? 0 : 1 }} />
     </>
   );
 }
 
-function Plant({ x, y, w, h }: { x: number; y: number; w: number; h: number }) {
+function Cloud({ top, width, delay, duration }: { top: string; width: string; delay: string; duration: string }) {
+  return (
+    <span className="lounge-cloud absolute left-0" style={{ top, width, animationDelay: delay, animationDuration: duration }}>
+      <span className="relative block w-full aspect-[3/1]">
+        <span className="absolute left-0 bottom-0 w-full h-[55%] rounded-full bg-white/95" />
+        <span className="absolute left-[18%] bottom-[25%] w-[38%] aspect-square rounded-full bg-white/95" />
+        <span className="absolute left-[45%] bottom-[20%] w-[30%] aspect-square rounded-full bg-white/95" />
+      </span>
+    </span>
+  );
+}
+
+function Plant({ x, y, w, h, fx }: { x: number; y: number; w: number; h: number; fx?: number }) {
   return (
     <Item x={x} y={y} w={w} h={h}>
-      <span className="absolute left-[8%] top-[4%] w-[52%] h-[46%] rounded-full bg-[#1f7a5a]" />
-      <span className="absolute right-[4%] top-[12%] w-[50%] h-[42%] rounded-full bg-[#27936c]" />
-      <span className="absolute left-[24%] top-0 w-[48%] h-[38%] rounded-full bg-[#2fae80]" />
+      <div key={fx ?? 0} className={`absolute inset-0 ${fx ? "lounge-rustle" : ""}`}>
+        <span className="absolute left-[8%] top-[4%] w-[52%] h-[46%] rounded-full bg-[#1f7a5a]" />
+        <span className="absolute right-[4%] top-[12%] w-[50%] h-[42%] rounded-full bg-[#27936c]" />
+        <span className="absolute left-[24%] top-0 w-[48%] h-[38%] rounded-full bg-[#2fae80]" />
+      </div>
       <span className="absolute left-[18%] right-[18%] bottom-0 h-[44%] rounded-b-[30%] rounded-t-md bg-[#8a5a3c] border-t-4 border-[#a36d4a]" />
+      {fx ? (
+        <span key={`d${fx}`} className="lounge-drops absolute left-1/2 -top-[10%] text-[clamp(8px,1.6cqw,18px)]">💧</span>
+      ) : null}
     </Item>
   );
 }

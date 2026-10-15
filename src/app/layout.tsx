@@ -5,6 +5,7 @@ import AppShell from "@/components/shell/AppShell";
 import ParticleBackground from "@/components/ParticleBackground";
 import LoadingScreen from "@/components/LoadingScreen";
 import Terminal from "@/components/Terminal";
+import { THEME_INIT_SCRIPT } from "@/lib/theme-script";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -37,8 +38,13 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      data-theme="dark"
+      suppressHydrationWarning
       className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} antialiased`}
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+      </head>
       <body className="min-h-full">
         <LoadingScreen />
         <ParticleBackground />

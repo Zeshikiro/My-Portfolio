@@ -87,7 +87,9 @@ export default function ParticleBackground() {
       }
 
       draw() {
-        ctx!.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+        ctx!.fillStyle = light
+          ? `rgba(70, 64, 160, ${this.opacity * 0.8})`
+          : `rgba(255, 255, 255, ${this.opacity})`;
         ctx!.beginPath();
         ctx!.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx!.fill();
@@ -102,7 +104,9 @@ export default function ParticleBackground() {
       }
     };
 
+    let light = false;
     const animateParticles = () => {
+      light = document.documentElement.dataset.theme === "light";
       ctx!.clearRect(0, 0, canvas.width, canvas.height);
 
       for (let i = 0; i < particles.length; i++) {

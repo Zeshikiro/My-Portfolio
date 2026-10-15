@@ -3,9 +3,10 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, type Variants } from "framer-motion";
-import { Download, X } from "lucide-react";
+import { Download, Moon, Sun, X } from "lucide-react";
 import { FaGithub, FaLinkedin, FaFacebook, FaInstagram, FaTiktok } from "react-icons/fa";
 import { TABS, LIVE_TABS, type Tab } from "@/lib/tabs";
+import { toggleTheme, useTheme } from "@/lib/theme";
 
 export const SIDEBAR_WIDTH = 260;
 
@@ -37,6 +38,7 @@ type SidebarProps = {
 
 export default function Sidebar({ onNavigate, onClose }: SidebarProps) {
   const pathname = usePathname();
+  const theme = useTheme();
 
   const renderItem = (tab: Tab, shortcut: number) => {
     const active = pathname === tab.href;
@@ -112,13 +114,23 @@ export default function Sidebar({ onNavigate, onClose }: SidebarProps) {
             </span>
             <span className="font-mono text-[10px] text-[var(--color-text-muted)] mt-1">jrn_portfolio</span>
           </Link>
-          <button
-            onClick={onClose}
-            aria-label="Close menu"
-            className="w-9 h-9 rounded-lg flex items-center justify-center text-[var(--color-text-secondary)] hover:text-white hover:bg-[var(--color-bg-surface-hover)] transition-colors"
-          >
-            <X size={18} />
-          </button>
+          <div className="flex items-center gap-1">
+            <button
+              onClick={toggleTheme}
+              aria-label={theme === "light" ? "Switch to dark mode" : "Switch to light mode"}
+              title={theme === "light" ? "Night mode" : "Day mode"}
+              className="w-9 h-9 rounded-lg flex items-center justify-center text-[var(--color-text-secondary)] hover:text-[var(--color-accent-primary)] hover:bg-[var(--color-bg-surface-hover)] transition-colors"
+            >
+              {theme === "light" ? <Moon size={17} /> : <Sun size={17} />}
+            </button>
+            <button
+              onClick={onClose}
+              aria-label="Close menu"
+              className="w-9 h-9 rounded-lg flex items-center justify-center text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-surface-hover)] transition-colors"
+            >
+              <X size={18} />
+            </button>
+          </div>
         </motion.div>
 
         {/* Navigation */}

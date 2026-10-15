@@ -6,8 +6,10 @@ import { AnimatePresence, motion } from "framer-motion";
 import { LogIn, Pencil, Wifi, WifiOff, Loader2 } from "lucide-react";
 import AvatarSprite from "./AvatarSprite";
 import RoomDecor from "./RoomDecor";
-import ChatPanel from "./ChatPanel";
+import ChatPanel, { type SendResult } from "./ChatPanel";
 import { getSupabase } from "@/lib/supabase";
+import { useTheme } from "@/lib/theme";
+import { ChatGuard } from "@/lib/chatSafety";
 import {
   AVATARS, BUBBLE_MS, CHANNEL, CHAT_COOLDOWN_MS, CHAT_MAX, EMOTES, EMOTE_COOLDOWN_MS,
   NAME_MAX, SEND_INTERVAL_MS, SPEED, TRACK_INTERVAL_MS, WORLD,
@@ -121,6 +123,42 @@ export default function Lounge() {
   const [messages, setMessages] = useState<ChatMsg[]>([]);
   const [bubbles, setBubbles] = useState<Record<string, Bubble>>({});
   const [emotes, setEmotes] = useState<Record<string, Bubble>>({});
+
+  const theme = useTheme();
+  const day = theme === "light";
+  const [mutedPlayers, setMutedPlayers] = useState<Set<string>>(new Set());
+  const [clockHands, setClockHands] = useState(() => {
+    const d = new Date();
+    const m = d.getMinutes();
+    const h = (d.getHours() % 12) + m / 60;
+    return { hourDeg: h * 30, minDeg: m * 6 };
+  });
+  const [roomFx, setRoomFx] = useState<Record<string, number>>({});
+  const chatGuard = useRef<ChatGuard | null>(null);
+  if (!chatGuard.current) {
+    chatGuard.current = new ChatGuard(CHAT_COOLDOWN_MS);
+  }
+
+  const toggleMute = useCallback((id: string) => {
+    setMutedPlayers((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }, []);
+
+  // Update clock every 10 seconds
+  useEffect(() => {
+    const updateTime = () => {
+      const d = new Date();
+      const m = d.getMinutes();
+      const h = (d.getHours() % 12) + m / 60;
+      setClockHands({ hourDeg: h * 30, minDeg: m * 6 });
+    };
+    const t = setInterval(updateTime, 10000);
+    return () => clearInterval(t);
+  }, []);
 
   const sims = useRef(new Map<string, Sim>());
   const channelRef = useRef<RealtimeChannel | null>(null);
@@ -380,16 +418,17 @@ export default function Lounge() {
 
   // ---------- Actions ----------
   const sendChat = useCallback(
-    (raw: string) => {
-      const text = maskProfanity(cleanText(raw, CHAT_MAX));
-      if (!text || !profile) return false;
+    (raw: string): SendResult => {
+      if (!profile || !chatGuard.current) return { ok: false, message: "" };
+      const check = chatGuard.current.check(raw);
+      if (!check.ok) {
+        return { ok: false, message: check.reason };
+      }
       const now = Date.now();
-      if (now - lastChat.current < CHAT_COOLDOWN_MS) return false;
-      lastChat.current = now;
-      pushMessage({ key: nextKey("m"), kind: "chat", id: selfId, name: profile.name, text, ts: now });
-      showBubble(selfId, text);
-      send("chat", { id: selfId, name: profile.name, text });
-      return true;
+      pushMessage({ key: nextKey("m"), kind: "chat", id: selfId, name: profile.name, text: check.text, ts: now });
+      showBubble(selfId, check.text);
+      send("chat", { id: selfId, name: profile.name, text: check.text });
+      return { ok: true, message: check.warning };
     },
     [profile, selfId, pushMessage, showBubble, send],
   );
@@ -506,7 +545,12 @@ export default function Lounge() {
               onPointerDown={onRoomPointer}
               className="@container relative w-full aspect-[1000/625] rounded-2xl overflow-hidden border border-[var(--color-glass-border)] bg-[#14121b] select-none touch-none cursor-pointer"
             >
-              <RoomDecor />
+              <RoomDecor
+                day={day}
+                fx={roomFx}
+                hourDeg={clockHands.hourDeg}
+                minDeg={clockHands.minDeg}
+              />
               {players.map((p) => (
                 <PlayerAvatar
                   key={p.id}
@@ -538,7 +582,15 @@ export default function Lounge() {
             </div>
           </div>
 
-          <ChatPanel messages={messages} players={players} selfId={selfId} inputRef={inputRef} onSend={sendChat} />
+          <ChatPanel
+            messages={messages}
+            players={players}
+            selfId={selfId}
+            inputRef={inputRef}
+            onSend={sendChat}
+            muted={mutedPlayers}
+            onToggleMute={toggleMute}
+          />
         </div>
       </div>
 

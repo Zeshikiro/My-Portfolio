@@ -142,7 +142,7 @@ export default function Gallery() {
 
             <button
               onClick={() => setSelected(null)}
-              className="absolute top-6 right-6 z-10 w-12 h-12 rounded-full bg-[var(--color-bg-surface)] text-white flex items-center justify-center hover:bg-[var(--color-accent-primary)] transition-colors"
+              className="absolute top-6 right-6 z-10 w-12 h-12 rounded-full bg-[var(--color-bg-surface)] text-[var(--color-text-primary)] flex items-center justify-center hover:bg-[var(--color-accent-primary)] transition-colors"
               aria-label="Close"
             >
               <X size={24} />
