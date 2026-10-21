@@ -5,7 +5,7 @@
 // Mouse clicks, taps, keyboard (E near an item) or a future mobile joystick/action button
 // all go through the same path in Lounge.tsx.
 
-export type ItemAction = "clock" | "window" | "sit" | "plant" | "server" | "coffee" | "poster" | "neon";
+export type ItemAction = "clock" | "window" | "sit" | "plant" | "server" | "coffee" | "poster" | "neon" | "exit";
 
 export type Interactable = {
   id: string;
@@ -43,6 +43,8 @@ export const ITEMS: Interactable[] = [
     hit: { x: 716, y: 456, w: 92, h: 70 }, spot: { x: 762, y: 512 } },
   { id: "beanbag2", label: "Bean bag", hint: "Sit down", action: "sit",
     hit: { x: 208, y: 506, w: 92, h: 70 }, spot: { x: 254, y: 562 } },
+  { id: "exit", label: "Exit door", hint: "Leave the lounge", action: "exit",
+    hit: { x: 440, y: 200, w: 120, h: 190 }, spot: { x: 500, y: 400 } },
 ];
 
 export const ITEM_BY_ID = new Map(ITEMS.map((i) => [i.id, i]));

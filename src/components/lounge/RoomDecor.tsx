@@ -122,6 +122,40 @@ function RoomDecor({ day, fx, hourDeg, minDeg }: Props) {
         <span className="absolute inset-x-0 top-1/2 h-[3px] -translate-y-1/2 bg-[#2e2e4a]" />
       </Item>
 
+      {/* Exit door — centered on the back wall */}
+      <Item x={445} y={14} w={110} h={178} z={1} className="flex flex-col items-center">
+        {/* Door frame */}
+        <div className="absolute inset-0 rounded-t-[12%] bg-[#2a2444] border-2 border-[#3a3660] shadow-[inset_0_0_20px_rgba(0,0,0,0.5)]">
+          {/* Door surface */}
+          <div className="absolute inset-[5%] rounded-t-[10%] transition-colors duration-700"
+            style={{ background: day ? "#a89474" : "#3c3558" }}>
+            {/* Door panels */}
+            <div className="absolute left-[10%] right-[10%] top-[6%] h-[28%] rounded-md border transition-colors duration-700"
+              style={{ borderColor: day ? "#8a785e" : "#2e2848", background: day ? "#9a8768" : "#342e50" }} />
+            <div className="absolute left-[10%] right-[10%] top-[40%] h-[28%] rounded-md border transition-colors duration-700"
+              style={{ borderColor: day ? "#8a785e" : "#2e2848", background: day ? "#9a8768" : "#342e50" }} />
+            {/* Door handle */}
+            <span className="absolute right-[14%] top-[48%] w-[8%] h-[10%] rounded-full transition-colors duration-700"
+              style={{ background: day ? "#d4a94a" : "#f5b942", boxShadow: day ? "0 0 4px #d4a94a66" : "0 0 8px #f5b94288" }} />
+          </div>
+        </div>
+        {/* EXIT sign above the door */}
+        <div className="absolute -top-[18%] left-1/2 -translate-x-1/2 px-[12%] py-[3%] rounded-sm"
+          style={{
+            background: "#cc2030",
+            boxShadow: day ? "0 0 6px #cc203044" : "0 0 12px #cc203088, 0 0 24px #cc203044",
+          }}>
+          <span className="font-heading font-bold text-white text-[clamp(5px,1.1cqw,12px)] tracking-[0.15em] leading-none whitespace-nowrap">
+            EXIT
+          </span>
+        </div>
+        {/* Light glow beneath the sign at night */}
+        {!day && (
+          <span className="absolute -top-[8%] left-1/2 -translate-x-1/2 w-[80%] h-[30%] rounded-full"
+            style={{ background: "radial-gradient(ellipse, rgba(204,32,48,0.25), transparent 70%)" }} />
+        )}
+      </Item>
+
       {/* Neon sign */}
       <Item x={330} y={38} w={340} h={84} z={1} className="flex items-center justify-center">
         <span

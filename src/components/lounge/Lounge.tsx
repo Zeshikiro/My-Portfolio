@@ -1,6 +1,7 @@
 "use client";
 
 import { memo, useCallback, useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import type { RealtimeChannel } from "@supabase/supabase-js";
 import { AnimatePresence, motion } from "framer-motion";
 import { LogIn, Pencil, Wifi, WifiOff, Loader2 } from "lucide-react";
@@ -8,8 +9,10 @@ import AvatarSprite from "./AvatarSprite";
 import RoomDecor from "./RoomDecor";
 import ChatPanel, { type SendResult } from "./ChatPanel";
 import { getSupabase } from "@/lib/supabase";
-import { useTheme } from "@/lib/theme";
-import { ChatGuard } from "@/lib/chatSafety";
+import { useTheme, toggleTheme } from "@/lib/theme";
+import { ChatGuard, RemoteGuard } from "@/lib/chatSafety";
+import { ITEMS, FUN_FACTS, type Interactable } from "@/lib/loungeItems";
+import { applyAvatarCursor, saveCursorPref } from "@/lib/avatarCursor";
 import {
   AVATARS, BUBBLE_MS, CHANNEL, CHAT_COOLDOWN_MS, CHAT_MAX, EMOTES, EMOTE_COOLDOWN_MS,
   NAME_MAX, SEND_INTERVAL_MS, SPEED, TRACK_INTERVAL_MS, WORLD,
@@ -29,9 +32,11 @@ type Rig = {
 };
 
 /** Simulation state for one avatar. Lives in a ref so movement never re-renders React. */
-type Sim = { x: number; y: number; tx: number; ty: number; dir: Dir; moving: boolean; el: HTMLDivElement | null; rig: Rig };
+type Sim = { x: number; y: number; tx: number; ty: number; dir: Dir; moving: boolean; sitting: boolean; el: HTMLDivElement | null; rig: Rig };
 type Bubble = { text: string; key: string };
 type Status = "offline" | "connecting" | "live" | "error";
+/** Queued item interaction: walk to spot, then fire the action. */
+type PendingInteraction = { item: Interactable; arrived: boolean };
 
 const SPAWN = { x: 500, y: 560 };
 const MAX_MESSAGES = 100;
@@ -43,6 +48,16 @@ const newRig = (): Rig => ({
   lean: 0, leanV: 0, hr: 0, hrV: 0, hx: 0, hxV: 0, sq: 1, sqV: 0, bob: 0, phase: 0, lx: 0, ly: 0,
   lastNvx: 0, lastNvy: 0, still: 1, wasMoving: false,
 });
+
+/** Random fun-fact index, cycling without repeats in a short window. */
+let lastFacts: number[] = [];
+function nextFunFact(): string {
+  const pool = FUN_FACTS.map((_, i) => i).filter((i) => !lastFacts.includes(i));
+  const idx = pool[Math.floor(Math.random() * pool.length)] ?? 0;
+  lastFacts.push(idx);
+  if (lastFacts.length > Math.floor(FUN_FACTS.length * 0.6)) lastFacts = lastFacts.slice(-2);
+  return FUN_FACTS[idx];
+}
 
 /** Damped spring step. Returns [position, velocity]. */
 function spring(x: number, v: number, target: number, k: number, c: number, dt: number): [number, number] {
@@ -102,6 +117,8 @@ function paint(s: Sim) {
   const moving = String(s.moving);
   if (el.dataset.moving !== moving) el.dataset.moving = moving;
   if (el.dataset.dir !== s.dir) el.dataset.dir = s.dir;
+  const sit = String(s.sitting);
+  if (el.dataset.sit !== sit) el.dataset.sit = sit;
   const r = s.rig;
   const st = el.style;
   st.setProperty("--lean", `${r.lean.toFixed(2)}deg`);
@@ -115,6 +132,7 @@ function paint(s: Sim) {
 
 export default function Lounge() {
   // This component is client-only (loaded with ssr: false), so browser storage is safe here.
+  const router = useRouter();
   const [selfId] = useState(getSessionId);
   const [profile, setProfile] = useState<Profile>(loadProfile);
   const [joined, setJoined] = useState(false);
@@ -127,6 +145,7 @@ export default function Lounge() {
   const theme = useTheme();
   const day = theme === "light";
   const [mutedPlayers, setMutedPlayers] = useState<Set<string>>(new Set());
+  const mutedRef = useRef(mutedPlayers);
   const [clockHands, setClockHands] = useState(() => {
     const d = new Date();
     const m = d.getMinutes();
@@ -134,16 +153,23 @@ export default function Lounge() {
     return { hourDeg: h * 30, minDeg: m * 6 };
   });
   const [roomFx, setRoomFx] = useState<Record<string, number>>({});
+  const [showExitPrompt, setShowExitPrompt] = useState(false);
   const chatGuard = useRef<ChatGuard | null>(null);
-  if (!chatGuard.current) {
+  if (chatGuard.current == null) {
     chatGuard.current = new ChatGuard(CHAT_COOLDOWN_MS);
   }
+  const remoteGuard = useRef<RemoteGuard | null>(null);
+  if (remoteGuard.current == null) {
+    remoteGuard.current = new RemoteGuard();
+  }
+  const pendingInteraction = useRef<PendingInteraction | null>(null);
 
   const toggleMute = useCallback((id: string) => {
     setMutedPlayers((prev) => {
       const next = new Set(prev);
       if (next.has(id)) next.delete(id);
       else next.add(id);
+      mutedRef.current = next;
       return next;
     });
   }, []);
@@ -166,7 +192,6 @@ export default function Lounge() {
   const roomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const keys = useRef({ up: false, down: false, left: false, right: false });
-  const lastChat = useRef(0);
   const lastEmote = useRef(0);
   const timers = useRef(new Set<ReturnType<typeof setTimeout>>());
 
@@ -213,7 +238,7 @@ export default function Lounge() {
   const ensureSim = useCallback((id: string, x: number, y: number, dir: Dir) => {
     let s = sims.current.get(id);
     if (!s) {
-      s = { x, y, tx: x, ty: y, dir, moving: false, el: null, rig: newRig() };
+      s = { x, y, tx: x, ty: y, dir, moving: false, sitting: false, el: null, rig: newRig() };
       sims.current.set(id, s);
     }
     return s;
@@ -229,6 +254,83 @@ export default function Lounge() {
   const send = useCallback((event: string, payload: Record<string, unknown>) => {
     if (liveRef.current) channelRef.current?.send({ type: "broadcast", event, payload });
   }, []);
+
+  /** Run the action when the avatar arrives at an item's spot. */
+  const executeAction = useCallback(
+    (item: Interactable) => {
+      const me = sims.current.get(selfId);
+      const now = Date.now();
+
+      switch (item.action) {
+        case "clock":
+          toggleTheme();
+          addSystem("Theme toggled.");
+          break;
+        case "window":
+          addSystem(day ? "☀️ A sunny day outside." : "🌙 City lights glitter in the night.");
+          break;
+        case "neon":
+          setRoomFx((prev) => ({ ...prev, neon: now }));
+          if (item.shared) send("fx", { id: selfId, item: item.id });
+          break;
+        case "poster":
+          showBubble(selfId, nextFunFact());
+          pushMessage({ key: nextKey("sys"), kind: "system", text: `📋 ${FUN_FACTS[0]}`, ts: now });
+          break;
+        case "server":
+          setRoomFx((prev) => ({ ...prev, server: now }));
+          addSystem("⚡ SELECT * FROM server_rack; — 6 rows returned.");
+          if (item.shared) send("fx", { id: selfId, item: item.id });
+          break;
+        case "plant":
+          setRoomFx((prev) => ({ ...prev, [item.id]: now }));
+          addSystem("💧 You watered the plant.");
+          if (item.shared) send("fx", { id: selfId, item: item.id });
+          break;
+        case "coffee":
+          setRoomFx((prev) => ({ ...prev, coffee: now }));
+          showEmote(selfId, "☕");
+          if (item.shared) send("fx", { id: selfId, item: item.id });
+          break;
+        case "sit":
+          if (me) me.sitting = !me.sitting;
+          break;
+        case "exit":
+          setShowExitPrompt(true);
+          break;
+      }
+    },
+    [selfId, day, addSystem, pushMessage, showBubble, showEmote, send],
+  );
+
+  /** Called when a hotspot is clicked. Sets the avatar's target to the spot,
+   *  queues the action for when it arrives. */
+  const onItemClick = useCallback(
+    (item: Interactable) => {
+      const me = sims.current.get(selfId);
+      if (!me) return;
+      // Stand up if sitting
+      if (me.sitting) me.sitting = false;
+      me.tx = clampX(item.spot.x);
+      me.ty = clampY(item.spot.y);
+      pendingInteraction.current = { item, arrived: false };
+    },
+    [selfId],
+  );
+
+  /** Exit prompt actions */
+  const handleExit = useCallback(
+    (keepCursor: boolean) => {
+      setShowExitPrompt(false);
+      if (keepCursor) {
+        applyAvatarCursor(profile.avatar);
+        saveCursorPref(profile.avatar);
+        window.dispatchEvent(new CustomEvent("jrn-cursor", { detail: profile.avatar }));
+      }
+      router.push("/");
+    },
+    [profile.avatar, router],
+  );
 
   // ---------- Connection (Presence + Broadcast) ----------
   useEffect(() => {
@@ -300,6 +402,9 @@ export default function Lounge() {
     ch.on("broadcast", { event: "chat" }, ({ payload }) => {
       const id = typeof payload?.id === "string" ? payload.id : "";
       if (!id || id === selfId) return;
+      // Remote rate-limit + mute check
+      if (!remoteGuard.current!.allow(id)) return;
+      if (mutedRef.current.has(id)) return;
       const now = Date.now();
       if (now - (lastRemoteChat.get(id) ?? 0) < CHAT_COOLDOWN_MS * 0.5) return;
       lastRemoteChat.set(id, now);
@@ -314,6 +419,14 @@ export default function Lounge() {
       const id = typeof payload?.id === "string" ? payload.id : "";
       if (!id || id === selfId || !(EMOTES as readonly string[]).includes(payload.e)) return;
       showEmote(id, payload.e);
+    });
+
+    // Shared room effects from other players
+    ch.on("broadcast", { event: "fx" }, ({ payload }) => {
+      const id = typeof payload?.id === "string" ? payload.id : "";
+      const itemId = typeof payload?.item === "string" ? payload.item : "";
+      if (!id || id === selfId || !itemId) return;
+      setRoomFx((prev) => ({ ...prev, [itemId]: Date.now() }));
     });
 
     ch.subscribe(async (st) => {
@@ -364,6 +477,9 @@ export default function Lounge() {
           const len = Math.hypot(kx, ky);
           me.tx = clampX(me.x + (kx / len) * 30);
           me.ty = clampY(me.y + (ky / len) * 30);
+          // Cancel pending interaction if moving via keyboard
+          pendingInteraction.current = null;
+          if (me.sitting) me.sitting = false;
         }
       }
 
@@ -392,6 +508,14 @@ export default function Lounge() {
         paint(s);
       }
 
+      // Check if our avatar has arrived at a pending interaction spot.
+      if (me && !me.moving && pendingInteraction.current && !pendingInteraction.current.arrived) {
+        pendingInteraction.current.arrived = true;
+        const pi = pendingInteraction.current;
+        pendingInteraction.current = null;
+        executeAction(pi.item);
+      }
+
       // Networking for our own avatar.
       if (me) {
         const now = Date.now();
@@ -414,7 +538,7 @@ export default function Lounge() {
     };
     raf = requestAnimationFrame(frame);
     return () => cancelAnimationFrame(raf);
-  }, [joined, profile, selfId, send]);
+  }, [joined, profile, selfId, send, executeAction]);
 
   // ---------- Actions ----------
   const sendChat = useCallback(
@@ -501,6 +625,9 @@ export default function Lounge() {
     if (!me || !rect) return;
     me.tx = clampX(((e.clientX - rect.left) / rect.width) * WORLD.w);
     me.ty = clampY(((e.clientY - rect.top) / rect.height) * WORLD.h);
+    // Cancel pending interactions and stand up on free-click
+    pendingInteraction.current = null;
+    if (me.sitting) me.sitting = false;
     inputRef.current?.blur();
   };
 
@@ -561,6 +688,28 @@ export default function Lounge() {
                   register={register}
                 />
               ))}
+              {/* Interactable hotspots */}
+              {joined && ITEMS.map((item) => (
+                <div
+                  key={item.id}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={item.label}
+                  onClick={(e) => { e.stopPropagation(); onItemClick(item); }}
+                  onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); e.stopPropagation(); onItemClick(item); } }}
+                  className="lounge-hotspot absolute cursor-pointer z-[950] pointer-events-auto"
+                  style={{
+                    left: `${(item.hit.x / WORLD.w) * 100}%`,
+                    top: `${(item.hit.y / WORLD.h) * 100}%`,
+                    width: `${(item.hit.w / WORLD.w) * 100}%`,
+                    height: `${(item.hit.h / WORLD.h) * 100}%`,
+                  }}
+                >
+                  <span className="lounge-tip absolute bottom-full left-1/2 mb-1 px-2 py-0.5 rounded-md bg-black/80 text-white text-[clamp(7px,1cqw,11px)] whitespace-nowrap font-mono pointer-events-none">
+                    {item.hint}
+                  </span>
+                </div>
+              ))}
             </div>
 
             <div className="mt-3 flex flex-wrap items-center gap-2">
@@ -596,6 +745,54 @@ export default function Lounge() {
 
       <AnimatePresence>
         {!joined && <JoinModal initial={profile} onJoin={join} />}
+      </AnimatePresence>
+
+      {/* Exit door prompt */}
+      <AnimatePresence>
+        {showExitPrompt && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[3100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ y: 20, scale: 0.96 }}
+              animate={{ y: 0, scale: 1 }}
+              exit={{ y: 10, scale: 0.98 }}
+              className="w-full max-w-sm rounded-2xl border border-[var(--color-glass-border)] bg-[var(--color-bg-surface)] p-6 shadow-2xl text-center"
+            >
+              <div className="text-3xl mb-3">🚪</div>
+              <h3 className="font-heading font-bold text-lg mb-2">Leaving the lounge?</h3>
+              <p className="text-sm text-[var(--color-text-secondary)] mb-5">
+                Want to take your robot avatar with you as a cursor?
+              </p>
+              <div className="flex flex-col gap-2">
+                <button
+                  type="button"
+                  onClick={() => handleExit(true)}
+                  className="w-full rounded-xl bg-gradient-primary text-white font-medium py-2.5 hover:brightness-110 transition"
+                >
+                  🤖 Keep avatar as cursor
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleExit(false)}
+                  className="w-full rounded-xl border border-[var(--color-glass-border)] text-[var(--color-text-secondary)] font-medium py-2.5 hover:text-[var(--color-text-primary)] hover:border-[var(--color-accent-primary)] transition-colors"
+                >
+                  Use normal pointer
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowExitPrompt(false)}
+                  className="text-xs text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] mt-1"
+                >
+                  Stay in the lounge
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
       </AnimatePresence>
     </section>
   );

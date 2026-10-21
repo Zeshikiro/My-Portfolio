@@ -5,6 +5,7 @@ import AppShell from "@/components/shell/AppShell";
 import ParticleBackground from "@/components/ParticleBackground";
 import LoadingScreen from "@/components/LoadingScreen";
 import Terminal from "@/components/Terminal";
+import CursorToggleClient from "@/components/CursorToggleClient";
 import { THEME_INIT_SCRIPT } from "@/lib/theme-script";
 
 const inter = Inter({
@@ -50,6 +51,7 @@ export default function RootLayout({
         <ParticleBackground />
         <AppShell>{children}</AppShell>
         <Terminal />
+        <CursorToggleClient />
       </body>
     </html>
   );
