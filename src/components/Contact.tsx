@@ -2,20 +2,65 @@
 
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { Mail, User, MessageSquare, Send, MapPin } from "lucide-react";
+import { Mail, User, MessageSquare, Send, MapPin, CheckCircle2, AlertCircle } from "lucide-react";
 import { FaGithub, FaLinkedin, FaFacebook, FaInstagram, FaTiktok } from "react-icons/fa";
 
 export default function Contact() {
-  const [status, setStatus] = useState<"idle" | "loading" | "success">("idle");
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus("loading");
-    // Simulate network request
-    setTimeout(() => {
-      setStatus("success");
-      setTimeout(() => setStatus("idle"), 3000);
-    }, 1500);
+    setErrorMessage("");
+
+    try {
+      const accessKey =
+        process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY ||
+        process.env.NEXT_PUBLIC_CONTACT_KEY;
+
+      if (!accessKey) {
+        // Fallback: mailto link if no API key is provided
+        window.location.href = `mailto:johnryannicolas43@gmail.com?subject=Portfolio Message from ${encodeURIComponent(
+          formData.name
+        )}&body=${encodeURIComponent(
+          `From: ${formData.name} (${formData.email})\n\nMessage:\n${formData.message}`
+        )}`;
+        setStatus("success");
+        setTimeout(() => setStatus("idle"), 4000);
+        return;
+      }
+
+      const res = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          access_key: accessKey,
+          name: formData.name,
+          email: formData.email,
+          message: formData.message,
+          from_name: "JRN Portfolio Contact Form",
+          subject: `New Portfolio Message from ${formData.name}`,
+        }),
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        setStatus("success");
+        setFormData({ name: "", email: "", message: "" });
+        setTimeout(() => setStatus("idle"), 4000);
+      } else {
+        setStatus("error");
+        setErrorMessage(data.message || "Failed to send message. Please try again.");
+      }
+    } catch {
+      setStatus("error");
+      setErrorMessage("Something went wrong. Please try again or reach out directly via email.");
+    }
   };
 
   const containerVariants: import("framer-motion").Variants = {
@@ -60,6 +105,8 @@ export default function Contact() {
                   <input
                     type="text"
                     required
+                    value={formData.name}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
                     placeholder="Your Name"
                     className="w-full bg-[var(--color-bg-surface)] border border-[var(--color-glass-border)] rounded-xl pl-12 pr-4 py-3.5 text-[var(--color-text-primary)] placeholder-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-accent-primary)] focus:ring-1 focus:ring-[var(--color-accent-primary)] transition-all"
                   />
@@ -71,6 +118,8 @@ export default function Contact() {
                   <input
                     type="email"
                     required
+                    value={formData.email}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value }))}
                     placeholder="Your Email"
                     className="w-full bg-[var(--color-bg-surface)] border border-[var(--color-glass-border)] rounded-xl pl-12 pr-4 py-3.5 text-[var(--color-text-primary)] placeholder-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-accent-primary)] focus:ring-1 focus:ring-[var(--color-accent-primary)] transition-all"
                   />
@@ -82,14 +131,24 @@ export default function Contact() {
                   <textarea
                     required
                     rows={5}
+                    value={formData.message}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, message: e.target.value }))}
                     placeholder="Your Message"
                     className="w-full bg-[var(--color-bg-surface)] border border-[var(--color-glass-border)] rounded-xl pl-12 pr-4 py-3.5 text-[var(--color-text-primary)] placeholder-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-accent-primary)] focus:ring-1 focus:ring-[var(--color-accent-primary)] transition-all resize-none"
                   />
                 </div>
+
+                {status === "error" && (
+                  <div className="flex items-center gap-2 p-3 rounded-xl border border-[var(--color-accent-tertiary)]/30 bg-[var(--color-accent-tertiary)]/10 text-[var(--color-accent-tertiary)] text-xs font-mono">
+                    <AlertCircle size={16} className="shrink-0" />
+                    <span>{errorMessage}</span>
+                  </div>
+                )}
+
                 <button
                   type="submit"
-                  disabled={status !== "idle"}
-                  className="w-full btn btn-primary py-4 rounded-xl flex items-center justify-center gap-2 bg-gradient-primary text-white font-medium hover:scale-[1.02] transition-transform disabled:opacity-70 disabled:hover:scale-100 shadow-glow"
+                  disabled={status === "loading"}
+                  className="w-full btn btn-primary py-4 rounded-xl flex items-center justify-center gap-2 bg-gradient-primary text-white font-medium hover:scale-[1.02] transition-transform disabled:opacity-70 disabled:hover:scale-100 shadow-glow cursor-pointer"
                 >
                   {status === "idle" && (
                     <>
@@ -101,7 +160,16 @@ export default function Contact() {
                     <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                   )}
                   {status === "success" && (
-                    <span>Message Sent!</span>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle2 size={18} className="text-white" />
+                      <span>Message Sent!</span>
+                    </div>
+                  )}
+                  {status === "error" && (
+                    <>
+                      <Send size={18} />
+                      <span>Try Again</span>
+                    </>
                   )}
                 </button>
               </form>
