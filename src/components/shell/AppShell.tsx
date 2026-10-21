@@ -149,10 +149,11 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           </span>
         </header>
 
-        <main className="flex-1 pb-10">{children}</main>
+        <main className={`flex-1 ${pathname === "/play" ? "overflow-hidden" : "pb-10"}`}>{children}</main>
       </motion.div>
 
       <StatusBar offset={offset} />
     </>
   );
 }
+

@@ -80,8 +80,7 @@ export const LIVE_TABS: Tab[] = [
     table: "lounge",
     query: "LISTEN lounge;",
     icon: Gamepad2,
-    badge: "soon",
-  },
+    },
 ];
 
 export const ALL_TABS: Tab[] = [...TABS, ...LIVE_TABS];
@@ -96,3 +95,4 @@ export function findTabByName(name: string): Tab | undefined {
     (t) => t.table === n || t.label.toLowerCase() === n || t.href === `/${n}`
   );
 }
+
