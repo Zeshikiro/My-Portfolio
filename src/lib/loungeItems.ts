@@ -22,11 +22,9 @@ export type Interactable = {
 
 export const ITEMS: Interactable[] = [
   { id: "clock", label: "Wall clock", hint: "Switch day / night", action: "clock",
-    hit: { x: 772, y: 40, w: 72, h: 72 }, spot: { x: 808, y: 228 } },
+    hit: { x: 264, y: 40, w: 72, h: 72 }, spot: { x: 300, y: 228 } },
   { id: "window", label: "Window", hint: "Peek outside", action: "window",
     hit: { x: 60, y: 28, w: 200, h: 122 }, spot: { x: 160, y: 228 } },
-  { id: "neon", label: "Neon sign", hint: "Tap the sign", action: "neon", shared: true,
-    hit: { x: 340, y: 40, w: 320, h: 80 }, spot: { x: 500, y: 228 } },
   { id: "poster", label: "Poster", hint: "Read a fun fact", action: "poster",
     hit: { x: 688, y: 42, w: 76, h: 100 }, spot: { x: 726, y: 228 } },
   { id: "server", label: "Server rack", hint: "Run a query", action: "server", shared: true,
@@ -44,7 +42,7 @@ export const ITEMS: Interactable[] = [
   { id: "beanbag2", label: "Bean bag", hint: "Sit down", action: "sit",
     hit: { x: 208, y: 506, w: 92, h: 70 }, spot: { x: 254, y: 562 } },
   { id: "exit", label: "Exit door", hint: "Leave the lounge", action: "exit",
-    hit: { x: 440, y: 200, w: 120, h: 190 }, spot: { x: 500, y: 400 } },
+    hit: { x: 435, y: 0, w: 130, h: 192 }, spot: { x: 500, y: 228 } },
 ];
 
 export const ITEM_BY_ID = new Map(ITEMS.map((i) => [i.id, i]));

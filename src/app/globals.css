@@ -204,20 +204,29 @@ html[data-theme="dark"] {
 
 /* Item effects (one-shot; replayed by remounting with a new key). */
 @keyframes lounge-rustle {
-  0%, 100% { transform: rotate(0); }
-  20% { transform: rotate(-7deg); }
-  40% { transform: rotate(6deg); }
-  60% { transform: rotate(-4deg); }
-  80% { transform: rotate(2deg); }
+  0%, 100% { transform: rotate(0) scale(1); }
+  15% { transform: rotate(-10deg) scale(1.05); }
+  30% { transform: rotate(8deg) scale(1.02); }
+  50% { transform: rotate(-6deg) scale(1.04); }
+  70% { transform: rotate(4deg) scale(1.01); }
+  85% { transform: rotate(-2deg); }
 }
-.lounge-rustle { transform-origin: 50% 100%; animation: lounge-rustle 0.8s ease-in-out; }
+.lounge-rustle { transform-origin: 50% 100%; animation: lounge-rustle 1.2s ease-in-out; }
 
 @keyframes lounge-drops {
-  0% { opacity: 0; transform: translate(-50%, -10px); }
-  30% { opacity: 1; }
-  100% { opacity: 0; transform: translate(-50%, 18px); }
+  0% { opacity: 0; transform: translate(-50%, -16px) scale(0.7); }
+  20% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, 32px) scale(0.5); }
 }
-.lounge-drops { animation: lounge-drops 1s ease-in forwards; }
+.lounge-drops { animation: lounge-drops 1.2s ease-in forwards; }
+
+@keyframes lounge-splash {
+  0% { opacity: 0; transform: scale(0) translateY(0); }
+  30% { opacity: 1; transform: scale(1.8) translateY(-6px); }
+  60% { opacity: 0.7; transform: scale(1) translateY(-12px); }
+  100% { opacity: 0; transform: scale(0.3) translateY(-18px); }
+}
+.lounge-splash { animation: lounge-splash 0.9s ease-out forwards; opacity: 0; }
 
 @keyframes lounge-busy {
   0%, 100% { box-shadow: 0 0 0 0 rgba(0, 212, 170, 0); }

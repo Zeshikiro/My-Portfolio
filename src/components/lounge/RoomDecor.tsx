@@ -156,26 +156,6 @@ function RoomDecor({ day, fx, hourDeg, minDeg }: Props) {
         )}
       </Item>
 
-      {/* Neon sign */}
-      <Item x={330} y={38} w={340} h={84} z={1} className="flex items-center justify-center">
-        <span
-          key={fx.neon ?? 0}
-          className={`font-heading font-bold tracking-wide text-[clamp(14px,4.2cqw,46px)] leading-none transition-[color,text-shadow] duration-700 ${fx.neon ? "lounge-neon-burst" : "lounge-neon"}`}
-          style={{
-            color: day ? "#5a50f0" : "#f3f0ff",
-            textShadow: day
-              ? "0 0 4px #6c63ff66, 0 2px 0 #00000014"
-              : "0 0 6px #6c63ff, 0 0 14px #6c63ff, 0 0 28px #00d4aa88",
-          }}
-        >
-          the lounge
-        </span>
-      </Item>
-      <Item x={380} y={126} w={240} h={18} z={1} className="flex items-center justify-center">
-        <span className="font-mono text-[clamp(6px,1.1cqw,12px)] transition-colors duration-700" style={{ color: day ? "#6a6a88" : "#8888a0" }}>
-          LISTEN lounge; -- say hi 👋
-        </span>
-      </Item>
 
       {/* Poster */}
       <Item x={690} y={44} w={72} h={96} z={1} className="rounded-[6%] border-2 border-[#2e2e4a] bg-[#101020] flex flex-col items-center justify-center gap-[6%] p-[6%]">
@@ -183,8 +163,8 @@ function RoomDecor({ day, fx, hourDeg, minDeg }: Props) {
         <span className="font-mono text-[clamp(4px,0.8cqw,9px)] text-[#a29bfe] text-center leading-tight">SELECT *<br />FROM fun;</span>
       </Item>
 
-      {/* Clock (shows the visitor's real local time) */}
-      <Item x={778} y={46} w={60} h={60} z={1}>
+      {/* Clock (shows the visitor's real local time) — near the window */}
+      <Item x={270} y={46} w={60} h={60} z={1}>
         <div className="absolute inset-0 rounded-full border-[3px] border-[#3a3a5c] shadow-[0_2px_0_#00000033] transition-colors duration-700"
           style={{ background: day ? "#fdfcff" : "#151528" }}>
           {Array.from({ length: 12 }).map((_, i) => (
@@ -297,7 +277,19 @@ function Plant({ x, y, w, h, fx }: { x: number; y: number; w: number; h: number;
       </div>
       <span className="absolute left-[18%] right-[18%] bottom-0 h-[44%] rounded-b-[30%] rounded-t-md bg-[#8a5a3c] border-t-4 border-[#a36d4a]" />
       {fx ? (
-        <span key={`d${fx}`} className="lounge-drops absolute left-1/2 -top-[10%] text-[clamp(8px,1.6cqw,18px)]">💧</span>
+        <span key={`d${fx}`} className="absolute inset-0">
+          {/* Multiple staggered water drops */}
+          <span className="lounge-drops absolute left-[40%] -top-[10%] text-[clamp(8px,1.6cqw,18px)]">💧</span>
+          <span className="lounge-drops absolute left-[60%] -top-[6%] text-[clamp(6px,1.2cqw,14px)]" style={{ animationDelay: "0.15s" }}>💧</span>
+          <span className="lounge-drops absolute left-[30%] -top-[4%] text-[clamp(7px,1.4cqw,16px)]" style={{ animationDelay: "0.35s" }}>💧</span>
+          <span className="lounge-drops absolute left-[55%] -top-[12%] text-[clamp(6px,1.1cqw,13px)]" style={{ animationDelay: "0.55s" }}>💧</span>
+          <span className="lounge-drops absolute left-[45%] -top-[2%] text-[clamp(5px,1cqw,12px)]" style={{ animationDelay: "0.7s" }}>💧</span>
+          {/* Splash particles at the soil */}
+          <span className="lounge-splash absolute left-[30%] top-[52%] w-[6%] aspect-square rounded-full bg-[#5bc4f0]" />
+          <span className="lounge-splash absolute left-[55%] top-[50%] w-[5%] aspect-square rounded-full bg-[#7dd4f7]" style={{ animationDelay: "0.2s" }} />
+          <span className="lounge-splash absolute left-[42%] top-[54%] w-[4%] aspect-square rounded-full bg-[#5bc4f0]" style={{ animationDelay: "0.4s" }} />
+          <span className="lounge-splash absolute left-[65%] top-[48%] w-[5%] aspect-square rounded-full bg-[#9de4ff]" style={{ animationDelay: "0.6s" }} />
+        </span>
       ) : null}
     </Item>
   );

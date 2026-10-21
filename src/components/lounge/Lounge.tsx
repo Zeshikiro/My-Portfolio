@@ -113,7 +113,7 @@ function paint(s: Sim) {
   if (!el) return;
   el.style.left = `${(s.x / WORLD.w) * 100}%`;
   el.style.top = `${(s.y / WORLD.h) * 100}%`;
-  el.style.zIndex = String(Math.round(s.y));
+  el.style.zIndex = String(Math.round(s.y) + (s.sitting ? 200 : 0));
   const moving = String(s.moving);
   if (el.dataset.moving !== moving) el.dataset.moving = moving;
   if (el.dataset.dir !== s.dir) el.dataset.dir = s.dir;
@@ -647,31 +647,27 @@ export default function Lounge() {
   };
 
   return (
-    <section className="pt-6 pb-16">
-      <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
-        <div className="flex flex-wrap items-center gap-3 mb-4">
-          <h1 className="font-heading font-bold text-3xl md:text-4xl">
-            The <span className="text-gradient-primary">Lounge</span>
-          </h1>
-          {joined && <StatusPill status={status} count={players.length} />}
-          {joined && (
-            <button
-              type="button"
-              onClick={() => setJoined(false)}
-              className="ml-auto flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono border border-[var(--color-glass-border)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:border-[var(--color-accent-primary)] transition-colors"
-            >
-              <Pencil size={12} /> Edit avatar
-            </button>
-          )}
-        </div>
+    <section className="flex flex-col h-[calc(100dvh-64px-28px)] overflow-hidden">
+      <div className="flex flex-wrap items-center gap-3 px-4 sm:px-6 py-2 shrink-0">
+        {joined && <StatusPill status={status} count={players.length} />}
+        {joined && (
+          <button
+            type="button"
+            onClick={() => setJoined(false)}
+            className="ml-auto flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono border border-[var(--color-glass-border)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:border-[var(--color-accent-primary)] transition-colors"
+          >
+            <Pencil size={12} /> Edit avatar
+          </button>
+        )}
+      </div>
 
-        <div className="grid lg:grid-cols-[minmax(0,1fr)_320px] gap-4">
-          <div>
-            <div
-              ref={roomRef}
-              onPointerDown={onRoomPointer}
-              className="@container relative w-full aspect-[1000/625] rounded-2xl overflow-hidden border border-[var(--color-glass-border)] bg-[#14121b] select-none touch-none cursor-pointer"
-            >
+      <div className="flex-1 min-h-0 grid lg:grid-cols-[minmax(0,1fr)_320px] gap-3 px-4 sm:px-6 pb-2">
+        <div className="flex flex-col min-h-0">
+          <div
+            ref={roomRef}
+            onPointerDown={onRoomPointer}
+            className="@container relative w-full flex-1 min-h-0 rounded-2xl overflow-hidden border border-[var(--color-glass-border)] bg-[#14121b] select-none touch-none cursor-pointer"
+          >
               <RoomDecor
                 day={day}
                 fx={roomFx}
@@ -712,7 +708,7 @@ export default function Lounge() {
               ))}
             </div>
 
-            <div className="mt-3 flex flex-wrap items-center gap-2">
+            <div className="mt-2 flex flex-wrap items-center gap-2 shrink-0">
               {EMOTES.map((e, i) => (
                 <button
                   key={e}
@@ -741,7 +737,6 @@ export default function Lounge() {
             onToggleMute={toggleMute}
           />
         </div>
-      </div>
 
       <AnimatePresence>
         {!joined && <JoinModal initial={profile} onJoin={join} />}
